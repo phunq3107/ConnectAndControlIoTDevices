@@ -1,16 +1,19 @@
 package com.phunq.backend.service;
 
 import com.phunq.backend.adafruit.AdafruitService;
+import com.phunq.backend.adafruit.IoTDeviceType;
 import com.phunq.backend.adafruit.dto.FeedDto;
-import com.phunq.backend.adafruit.dto.FeedValueDto;
 import com.phunq.backend.dao.FeedDAO;
-import com.phunq.backend.dao.FeedValueDAO;
+import com.phunq.backend.dao.GroupDAO;
 import com.phunq.backend.entity.Feed;
-import com.phunq.backend.entity.FeedValue;
-import java.io.IOException;
+import com.phunq.backend.entity.Feed.FeedType;
+import com.phunq.backend.entity.FeedGroup;
+import com.phunq.backend.exception.CustomNotFoundException;
+import com.phunq.backend.resources.dto.FeedResponse;
+import com.phunq.backend.util.MyMapperUtil;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,65 +26,71 @@ import org.springframework.stereotype.Service;
 public class FeedService {
 
   private final FeedDAO feedDAO;
-  private final FeedValueDAO feedValueDAO;
+  private final GroupDAO groupDAO;
+  private final FeedValueService feedValueService;
+  private final FeedGroupService feedGroupService;
   private final AdafruitService adafruitService;
+  private final MyMapperUtil myMapperUtil;
 
+  public Feed findFeedById(String feedId) {
+    return feedDAO.findById(feedId);
+  }
 
-  public void handleGetFeedsResult(List<FeedDto> feedDtos) throws IOException {
-    for (FeedDto feedDto : feedDtos) {
-      Feed feed = feedDAO.findById(feedDto.getId());
-      if (feed == null) {
-        feed = addFeed(feedDto);
-      }
-      if (feedDto.getLast_value_at() != null
-          && (feed.getLastTimeGetData().isBefore(feedDto.getLast_value_at())
-      ||feed.getLastTimeGetData().equals(feedDto.getLast_value_at()))) {
-        List<FeedValueDto> feedValueDtos
-            = adafruitService.getFeedValues(feed.getId(), feed.getLastTimeGetData());
-        Collections.reverse(feedValueDtos);
-        for (FeedValueDto feedValueDto: feedValueDtos){
-          addFeedValue(feedValueDto, feed);
-        }
-        if(feedValueDtos.size()>0){
-          feed.setLastTimeGetData(feedValueDtos.get(feedValueDtos.size()-1).getCreated_at());
-          feedDAO.makePersistence(feed);
-        }
-      }
-    }
+  public Feed save(Feed feed) {
+    return feedDAO.makePersistence(feed);
   }
 
 
   public Feed addFeed(FeedDto feedDto) {
+    FeedGroup feedGroup = groupDAO.findById(feedDto.getGroup().getId());
+    if (feedGroup == null) {
+      feedGroup = feedGroupService.addFeedGroup(feedDto.getGroup());
+    }
     Feed newFeed = new Feed();
     newFeed.setId(feedDto.getId());
     newFeed.setName(feedDto.getName());
     newFeed.setKey(feedDto.getKey());
     newFeed.setCreateAt(feedDto.getCreated_at());
+    newFeed.setFeedGroup(feedGroup);
     newFeed.setLastTimeGetData(LocalDateTime.of(1970, 1, 1, 0, 0, 0));
+
+    if (feedDto.getName().contains(IoTDeviceType.Light.getCode())) {
+      newFeed.setType(FeedType.Light);
+    } else if (feedDto.getName().contains(IoTDeviceType.Screen.getCode())) {
+      newFeed.setType(FeedType.Screen);
+    } else if (feedDto.getName().contains(IoTDeviceType.SoundSensor.getCode())) {
+      newFeed.setType(FeedType.SoundSensor);
+    } else if (feedDto.getName().contains(IoTDeviceType.TemperatureSensor.getCode())) {
+      newFeed.setType(FeedType.TemperatureSensor);
+    }
+
     return feedDAO.makePersistence(newFeed);
   }
 
-  public FeedValue addFeedValue(FeedValueDto feedValueDto) {
-    if (feedValueDto.getFeed_id() == null) {
-      return null;
+  public List<FeedResponse> getAllFeedInGroup(String groupKey) throws CustomNotFoundException {
+    FeedGroup group = groupDAO.findByKey(groupKey);
+    if (group == null) {
+      throw new CustomNotFoundException(String.format("Group [key=%s] not found", groupKey));
     }
-    Feed feed = feedDAO.findById(feedValueDto.getFeed_id());
+    return group.getFeeds().stream()
+        .map(myMapperUtil::toFeedResponse)
+        .collect(Collectors.toList());
+  }
+
+
+  public FeedResponse getFeedByKey(String feedKey) throws CustomNotFoundException {
+    Feed feed = feedDAO.findByKey(feedKey);
     if (feed == null) {
-      return null;
+      throw new CustomNotFoundException(String.format("Feed [key=%s] not found", feedKey));
     }
-    return addFeedValue(feedValueDto, feed);
+    return myMapperUtil.toFeedResponse(feed);
   }
 
-  public FeedValue addFeedValue(FeedValueDto feedValueDto, Feed feed) {
-    FeedValue feedValue = new FeedValue();
-    feedValue.setId(feedValueDto.getId());
-    feedValue.setValue(feedValueDto.getValue());
-    feedValue.setFeed(feed);
-    feedValue.setCreatedAt(feedValueDto.getCreated_at());
-    feedValue.setExpiration(feedValueDto.getExpiration());
-    feedValue.setCreatedEpoch(feedValueDto.getCreated_epoch());
-
-    return feedValueDAO.makePersistence(feedValue);
+  public FeedResponse getFeedById(String feedId) throws CustomNotFoundException {
+    Feed feed = feedDAO.findById(feedId);
+    if (feed == null) {
+      throw new CustomNotFoundException(String.format("Feed [id=%s] not found", feedId));
+    }
+    return myMapperUtil.toFeedResponse(feed);
   }
-
 }

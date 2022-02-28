@@ -1,6 +1,8 @@
 package com.phunq.backend.dao;
 
 import com.phunq.backend.entity.FeedValue;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author phunq3107
@@ -8,5 +10,5 @@ import com.phunq.backend.entity.FeedValue;
  */
 
 public interface FeedValueDAO extends GenericDAO<FeedValue, String> {
-
+    public List<FeedValue> getFeedValue(String feedKey, LocalDateTime startTime, LocalDateTime endTime);
 }

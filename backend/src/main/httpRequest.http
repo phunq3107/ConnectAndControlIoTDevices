@@ -1,0 +1,70 @@
+#### Get
+#GET {{baseUrl}}/{{apiEntryPoint}}/test
+
+###
+GET {{baseUrl}}/login?username={{username}}&password={{password}}
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/group
+Authorization: Bearer {{jwtToken}}
+
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/group
+Authorization: "Bearer {{jwtToken}}"
+
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/group/{{groupKey}}
+Authorization: "Bearer {{jwtToken}}"
+
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/group/{{groupKey-fail}}
+Authorization: "Bearer {{jwtToken}}"
+
+
+###
+POST {{baseUrl}}/{{apiEntryPoint}}/group/automation
+Content-Type: application/json
+Authorization: "Bearer {{jwtToken}}"
+
+{
+  "key": "%%",
+  "value": false
+}
+
+###
+POST {{baseUrl}}/{{apiEntryPoint}}/group/automation
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "key": "{{groupKey}}",
+  "value": true
+}
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/group/{{groupKey}}/feed
+Authorization: "Bearer {{jwtToken}}"
+
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/feed/{{feedKey}}
+Authorization: "Bearer {{jwtToken}}"
+
+###
+GET {{baseUrl}}/{{apiEntryPoint}}/feed/{{feedKey}}/data?start_time={{startTime}}&end_time={{endTime}}
+Authorization: "Bearer {{jwtToken}}"
+
+
+###
+POST {{baseUrl}}/{{apiEntryPoint}}/feed/{{feedKey}}/data
+Content-Type: application/json
+Authorization: "Bearer {{jwtToken}}"
+
+{
+  "value": "0"
+}
+
+

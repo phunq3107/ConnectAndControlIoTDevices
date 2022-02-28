@@ -3,6 +3,7 @@ package com.phunq.backend.scheduling;
 import com.phunq.backend.adafruit.AdafruitService;
 import com.phunq.backend.adafruit.dto.FeedDto;
 import com.phunq.backend.service.FeedService;
+import com.phunq.backend.service.MainService;
 import java.io.IOException;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,14 +25,14 @@ public class AdafruitScheduling {
   private final long interval = 5000L;
 
   private final AdafruitService adafruitService;
-  private final FeedService feedService;
+  private final MainService mainService;
 
 
 
   @Scheduled(fixedRate = interval)
   void getFeedFromAdafruitServer() throws IOException {
     List<FeedDto> feeds = adafruitService.getAllFeeds();
-    feedService.handleGetFeedsResult(feeds);
+    mainService.handleGetFeedsResult(feeds);
   }
 
 }

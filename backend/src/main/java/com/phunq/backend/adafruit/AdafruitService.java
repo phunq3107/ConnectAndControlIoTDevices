@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -43,20 +43,16 @@ public final class AdafruitService {
   private String username;
 
   @Value("${adafruit.key}")
-  private String key;
+  private String token;
 
-  @Value("${adafruit.feed.groupId}")
-  private String groupId;
 
   private static final String START_TIME_HEADER = "start_time";
 
   public List<FeedDto> getAllFeeds() throws IOException {
-    log.info("Get all feeds ....");
+//    log.info("Get all feeds ....");
     Response response = callApi("/feeds", "GET", null, null);
     if (response.isSuccessful()) {
-      return handleResponseBodyWithListEntity(response.body(), FeedDto.class)
-          .stream().filter(feed -> feed.getGroup().getId().equals(groupId))
-          .collect(Collectors.toList());
+      return handleResponseBodyWithListEntity(response.body(), FeedDto.class);
     } else {
       log.error("getAllFeeds() is fail");
       return new ArrayList<>();
@@ -64,7 +60,6 @@ public final class AdafruitService {
   }
 
   public List<FeedValueDto> getFeedValues(String feedKey, LocalDateTime pivot) throws IOException {
-    log.info(String.format("Get value of feed [%s] after %s", feedKey, pivot.toString()));
     String entrypoint = String.format("/feeds/%s/data", feedKey);
     Map<String, String> param = new TreeMap<>() {{
       put(START_TIME_HEADER, pivot.toString());
@@ -76,6 +71,18 @@ public final class AdafruitService {
       log.error("getFeedValues() is fail");
       return new ArrayList<>();
     }
+  }
+
+  public void addFeedValue(String feedKey, String value) throws IOException {
+    String entryPoint = String.format("/feeds/%s/data", feedKey);
+    String method = "POST";
+    MediaType mediaType = MediaType.parse("application/json");
+    String json = String.format("{\r\n\"datum\":{\r\n\"value\":%s\r\n}\r\n}", value);
+    RequestBody body = RequestBody.create(json, mediaType);
+    Map<String, String> param = new TreeMap<>() {{
+      put("X-AIO-Key", token);
+    }};
+    Response response = callApi(entryPoint, method, body, param);
   }
 
   private Response callApi(
@@ -91,7 +98,9 @@ public final class AdafruitService {
     Request request = new Request.Builder()
         .url(urlBuilder.build())
         .method(method, body)
+        .addHeader("Content-Type", "application/json")
         .build();
+
     return client.newCall(request).execute();
   }
 
@@ -103,23 +112,8 @@ public final class AdafruitService {
     for (JsonNode node : mapper.readTree(body)) {
       T entity = mapper.readValue(node.toString(), entityClass);
       retval.add(entity);
-//      if (feed.getGroup().getId().equals(groupId)) {
-//        feeds.add(feed);
-//      }
     }
     return retval;
-  }
-
-  private List<FeedDto> processGetAllFeedsBody(ResponseBody responseBody) throws IOException {
-    String body = Objects.requireNonNull(responseBody).string();
-    List<FeedDto> feeds = new ArrayList<>();
-    for (JsonNode node : mapper.readTree(body)) {
-      FeedDto feed = mapper.readValue(node.toString(), FeedDto.class);
-      if (feed.getGroup().getId().equals(groupId)) {
-        feeds.add(feed);
-      }
-    }
-    return feeds;
   }
 
   private String baseUrl() {

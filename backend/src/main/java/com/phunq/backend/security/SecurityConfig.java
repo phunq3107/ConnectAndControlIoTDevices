@@ -110,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     config.addAllowedHeader("Authorization");
     config.addAllowedMethod(POST);
     config.addAllowedMethod(GET);
+    config.addAllowedMethod(PATCH);
     source.registerCorsConfiguration("/**", config);
     return source;
   }

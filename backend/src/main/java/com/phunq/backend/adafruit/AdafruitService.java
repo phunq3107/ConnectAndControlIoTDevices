@@ -46,7 +46,8 @@ public final class AdafruitService {
   private String token;
 
 
-  private static final String START_TIME_HEADER = "start_time";
+  private static final String START_TIME_PARAM = "start_time";
+  private static final String AUTHENTICATION_HEADER = "X-AIO-Key";
 
   public List<FeedDto> getAllFeeds() throws IOException {
 //    log.info("Get all feeds ....");
@@ -62,7 +63,7 @@ public final class AdafruitService {
   public List<FeedValueDto> getFeedValues(String feedKey, LocalDateTime pivot) throws IOException {
     String entrypoint = String.format("/feeds/%s/data", feedKey);
     Map<String, String> param = new TreeMap<>() {{
-      put(START_TIME_HEADER, pivot.toString());
+      put(START_TIME_PARAM, pivot.toString());
     }};
     Response response = callApi(entrypoint, "GET", null, param);
     if (response.isSuccessful()) {
@@ -80,9 +81,9 @@ public final class AdafruitService {
     String json = String.format("{\r\n\"datum\":{\r\n\"value\":%s\r\n}\r\n}", value);
     RequestBody body = RequestBody.create(json, mediaType);
     Map<String, String> param = new TreeMap<>() {{
-      put("X-AIO-Key", token);
+      put(AUTHENTICATION_HEADER, token);
     }};
-    Response response = callApi(entryPoint, method, body, param);
+    callApi(entryPoint, method, body, param);
   }
 
   private Response callApi(

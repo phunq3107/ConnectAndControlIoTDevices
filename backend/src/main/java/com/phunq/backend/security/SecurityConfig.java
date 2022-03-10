@@ -3,29 +3,28 @@ package com.phunq.backend.security;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
-import com.auth0.jwt.algorithms.Algorithm;
-import com.phunq.backend.security.filter.CustomAuthenticationFilter;
-import com.phunq.backend.security.filter.CustomAuthorizationFilter;
-import com.phunq.backend.security.jwt.JwtAuthentication;
+import com.phunq.backend.security.filter.MyAuthenticationFilter;
+import com.phunq.backend.security.filter.MyAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * @author phunq3107
- * @since 2/27/2022
+ * @since 3/7/2022
  */
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -44,15 +43,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       "/api/v1/**"
   };
 
-  @Value("${admin.username}")
-  private String username;
-  @Value("${admin.password}")
-  private String password;
   @Value("${security.jwt.secretKey}")
   private String jwtSecretKey;
   @Value("${security.jwt.expirationTime}")
   private Long jwtExpirationTime;
 
+
+  private final AuthenticationProvider authenticationProvider;
+  private final UserDetailsService userDetailsService;
+
+  public SecurityConfig(
+      AuthenticationProvider authenticationProvider,
+      UserDetailsService userDetailsService) {
+    this.authenticationProvider = authenticationProvider;
+    this.userDetailsService = userDetailsService;
+  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -60,10 +65,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.authorizeRequests()
         .antMatchers(AUTH_WHITELIST).permitAll()
-        .antMatchers(AUTH_ADMIN).hasRole("ADMIN");
+        .anyRequest().authenticated();
 
-    http.addFilter(customAuthenticationFilter());
-    http.addFilterBefore(customAuthorizationFilter(), CustomAuthenticationFilter.class);
+    http.addFilter(myAuthenticationFilter());
+    http.addFilterBefore(myAuthorizationFilter(), MyAuthenticationFilter.class);
 
     http.cors().configurationSource(corsConfigurationSource());
     http.csrf().disable();
@@ -73,37 +78,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth
-        .inMemoryAuthentication()
-        .withUser(username).password(passwordEncoder().encode(password)).roles("ADMIN")
-        .and().passwordEncoder(passwordEncoder())
-    ;
+    auth.authenticationProvider(authenticationProvider);
   }
 
-  public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
-    CustomAuthenticationFilter filter = new CustomAuthenticationFilter(
-        authenticationManager(), jwtAuthentication()
+  private MyAuthenticationFilter myAuthenticationFilter() {
+    MyAuthenticationFilter filter = new MyAuthenticationFilter(
+        authenticationProvider
     );
     filter.setFilterProcessesUrl("/login");
     return filter;
   }
 
-  public CustomAuthorizationFilter customAuthorizationFilter() {
-    return new CustomAuthorizationFilter(
-        jwtAuthentication()
-    );
+  private MyAuthorizationFilter myAuthorizationFilter() {
+    return new MyAuthorizationFilter(jwtAuthentication());
   }
 
   @Bean
   public JwtAuthentication jwtAuthentication() {
-    Algorithm algorithm = Algorithm.HMAC256(jwtSecretKey.getBytes());
-    return new JwtAuthentication(algorithm, jwtExpirationTime);
+    return new JwtAuthentication(jwtSecretKey, jwtExpirationTime, userDetailsService);
   }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
@@ -119,5 +113,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", config);
     return source;
   }
-
 }
+

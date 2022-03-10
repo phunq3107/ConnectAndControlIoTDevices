@@ -18,10 +18,6 @@ import lombok.Data;
 @Data
 public class Feed {
 
-  public static enum FeedType {
-    Light, Screen, TemperatureSensor, SoundSensor
-  }
-
   @Id
   private String id;
   private String name;

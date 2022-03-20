@@ -49,24 +49,24 @@ public class AutomationService {
     int currentTemperature = temperatureSensor.getCurrentValueAsInt();
     if (currentTemperature < group.getLowerTemperatureThreshold()
         && group.getLight().getCurrentValueAsInt() == 0) {
-      log.warn(String.format(
-          "Automation task [Group %s]: Current temperature (%d) < %d => turn on light",
-          group.getName(),
-          currentTemperature,
-          group.getLowerTemperatureThreshold()
-      ));
+//      log.warn(String.format(
+//          "Automation task [Group %s]: Current temperature (%d) < %d => turn on light",
+//          group.getName(),
+//          currentTemperature,
+//          group.getLowerTemperatureThreshold()
+//      ));
       if (group.getLight() != null) {
         adafruitService.addFeedValue(group.getLight().getKey(), "1");
       }
 
     } else if (currentTemperature > group.getUpperTemperatureThreshold()
         && group.getLight().getCurrentValueAsInt() != 0) {
-      log.warn(String.format(
-          "Automation task [Group %s]: Current temperature (%d) > %d => turn off light",
-          group.getName(),
-          currentTemperature,
-          group.getUpperTemperatureThreshold()
-      ));
+//      log.warn(String.format(
+//          "Automation task [Group %s]: Current temperature (%d) > %d => turn off light",
+//          group.getName(),
+//          currentTemperature,
+//          group.getUpperTemperatureThreshold()
+//      ));
       if (group.getLight() != null) {
         adafruitService.addFeedValue(group.getLight().getKey(), "0");
       }
@@ -80,7 +80,7 @@ public class AutomationService {
     }
     int currentSound = soundSensor.getCurrentValueAsInt();
     if (currentSound > THRESHOLD_SOUND) {
-      log.warn(String.format("Automation task [Group %s]: Have hatched egg", group.getName()));
+//      log.warn(String.format("Automation task [Group %s]: Have hatched egg", group.getName()));
     }
   }
 }

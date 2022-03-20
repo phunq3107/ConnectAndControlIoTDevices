@@ -1,8 +1,5 @@
 package com.phunq.backend.security;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-
 import com.phunq.backend.security.filter.MyAuthenticationFilter;
 import com.phunq.backend.security.filter.MyAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import static org.springframework.http.HttpMethod.*;
 
 /**
  * @author phunq3107
@@ -111,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     config.addAllowedMethod(POST);
     config.addAllowedMethod(GET);
     config.addAllowedMethod(PATCH);
+    config.addAllowedMethod(DELETE);
     source.registerCorsConfiguration("/**", config);
     return source;
   }

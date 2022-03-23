@@ -100,7 +100,6 @@ function Charts({ tempSensor, soundSensor }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${soundSensor.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        console.log(result)
                         const [, ...rest] = prevSoundData.current
                         setSoundData([...rest, ...JSON.parse(result)])
                     })

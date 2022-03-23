@@ -1,8 +1,9 @@
-import { useState, useContext,useEffect } from 'react'
+import { useState, useContext } from 'react'
 import styles from './loginForm.module.css'
 import logo from './../../assets/logo.png'
 import { AuthContext } from '../../AuthContext'
 import { useNavigate } from 'react-router-dom'
+import LoginInput from 'LoginInput'
 function LoginForm() {
     const auth = useContext(AuthContext)
     const [username, setUsername] = useState('')
@@ -45,10 +46,4 @@ function LoginForm() {
         </div>
     )
 }
-const LoginInput = ({ label, ...inputProps }) => (
-    <div className={styles.loginInput}>
-        <label>{label}</label>
-        <input {...inputProps} />
-    </div>
-)
 export default LoginForm

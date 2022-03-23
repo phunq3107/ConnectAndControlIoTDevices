@@ -1,7 +1,8 @@
-import {createContext } from "react";
+import { createContext,useState } from "react";
 const AuthContext = createContext()
-function AuthProvider({children}){
-    const login = (username,password) => {
+function AuthProvider({ children }) {
+    const [incubators,setUserIncubators] = useState([]);
+    const login = (username, password) => {
         var requestOptions = {
             method: 'GET',
             redirect: 'follow'
@@ -25,18 +26,26 @@ function AuthProvider({children}){
     const logout = () => {
         localStorage.removeItem("user")
     }
-    const getCurrentUser = () =>{
+    const getCurrentUser = () => {
         return JSON.parse(localStorage.getItem("user"))
+    }
+    const setIncubators = (incubator) => {
+        setUserIncubators(incubator)
+    }
+    const getUserIncubators = () =>{
+        return setUserIncubators
     }
     const value = {
         login,
         logout,
-        getCurrentUser
+        getCurrentUser,
+        setIncubators,
+        getUserIncubators
     }
-    return(
+    return (
         <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )
 }
-export {AuthContext, AuthProvider}
+export { AuthContext, AuthProvider }

@@ -1,0 +1,72 @@
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.Header {
+  top: 0;
+  display: flex;
+  z-index: 1;
+  height: 85px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 45px;
+  background-color: e6eff5;
+  height: max-content;
+  position: sticky;
+  background-color: rgb(244, 245, 247);
+}
+.Logo {
+  position: relative;
+  display: flex;
+}
+
+.Menu {
+  display: flex;
+  margin: 0px;
+  height: 70px;
+}
+.Menu li {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.Menu li a {
+  color: rgb(64, 113, 219);
+  background-color: transparent;
+  transition: all ease 0.3s;
+}
+.Menu li:hover {
+  background: linear-gradient(
+    to bottom,
+    rgb(244, 245, 247) 65%,
+    rgba(141, 160, 248, 0.6) 100%
+  );
+  cursor: pointer;
+}
+.Menu li:hover a {
+  color: rgb(21, 8, 139);
+}
+.Menu > li.active {
+  background: linear-gradient(
+    to bottom,
+    rgb(244, 245, 247) 65%,
+    rgba(141, 160, 248, 0.6) 100%
+  );
+}
+.Menu > li.active > a {
+  color: rgb(21, 8, 139);
+}
+.user-nav a {
+  margin: 0px 10px;
+  font-size: 1.5rem;
+  color: rgb(64, 113, 219);
+}
+.user-nav a:hover {
+  color: rgb(21, 8, 139);
+}

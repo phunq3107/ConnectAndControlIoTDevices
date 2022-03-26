@@ -1,48 +1,56 @@
-.sidebar{
-    flex: 1;
-    height: calc(100vh - 50px);
-    background-color: rgb(251,251,255);
-    position:sticky;
-    top:50px;
+.adminsidebar {
+  flex: 1;
+  height: 100%;
+  background-color: rgb(251, 251, 255);
+  position: sticky;
+  top: 150px;
+}
+.sidebar {
+  flex: 1;
+  height: calc(100vh - 50px);
+  background-color: rgb(251, 251, 255);
+  position: sticky;
+  top: 50px;
 }
 
-.wrapper{
-    padding: 20px;
-    color:#555;
+.wrapper {
+  padding: 20px;
+  color: #555;
 }
 
-.menu{
-    margin-bottom: 10px;
+.menu {
+  margin-bottom: 10px;
 }
 
-.title{
-    font-size: 13px;
-    color: rgb(187,186,186);
+.title {
+  font-size: 13px;
+  color: rgb(187, 186, 186);
 }
 
-.list{
-    list-style: none;
-    padding:5px;
+.list {
+  list-style: none;
+  padding: 5px;
 }
 
-.listItem{
-    padding:5px;
-    cursor:pointer;
-    display:flex;
-    align-items: center;
-    border-radius: 10px;
+.listItem {
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
 }
 
-.listItem.active ,.listItem:hover{
-    background-color: rgb(240, 240, 255);
+.listItem.active,
+.listItem:hover {
+  background-color: rgb(240, 240, 255);
 }
 
-.icon{
-    margin-right: 5px;
-    font-size: 20px !important;
+.icon {
+  margin-right: 5px;
+  font-size: 20px !important;
 }
 
-.link{
-    text-decoration: none;
-    color: inherit;
+.link {
+  text-decoration: none;
+  color: inherit;
 }

@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+}
+.emtable {
+  width: 80%;
+  justify-content: center;
+}
+.emtable table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  width: 90%;
+  max-width: 700px;
+}
+
+.emtable > table > th,
+td {
+  text-align: center;
+  padding: 8px;
+}
+
+.emtable > table > tr:nth-child(even) {
+  background-color: #f3f2bf;
+}
+.emtable > table > tr:nth-child(odd) {
+  background-color: #b8b523;
+}
+th {
+  background-color: #ca8010;
+  color: white;
+}
+
+.searchbar {
+  margin: 0 auto;
+  width: 60%;
+  padding: 20px;
+}
+.searchbar input {
+  margin: 0 auto;
+  width: 60%;
+}
+
+.button {
+  margin: 0 auto;
+  padding-inline: 30px;
+}
+
+.form {
+  width: 80%;
+  display: block;
+  text-align: center;
+  justify-content: center;
+}
+.form > form {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.form > div {
+  font-size: 40px;
+  font-weight: 20px;
+  margin: 40px auto;
+}
+
+.form > form > label {
+  padding-right: 30px;
+  font-size: 20px;
+  font-style: italic;
+}

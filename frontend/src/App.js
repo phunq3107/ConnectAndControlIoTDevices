@@ -7,6 +7,9 @@ import Incubator from './pages/Incubator/Incubator';
 import EmployeeHome from './pages/Incubator/EmployeeHome/EmployeeHome';
 import { AuthContext } from './AuthContext';
 import { useContext,useEffect } from 'react';
+import AdminHome from './pages/Incubator/AdminHome/AdminHome';
+import EmployeeManage from './pages/Incubator/EmployeeManage/EmployeeManage';
+import EmployeeCreateForm from './pages/Incubator/EmployeeManage/EmployeeCreateForm';
 function App() {
   const auth = useContext(AuthContext)
   const navigate = useNavigate()
@@ -21,6 +24,9 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/admin" element={<AdminHome />} />
+        <Route path="/admin/employees" element={<EmployeeManage />} />
+        <Route path="/admin/create-form" element={<EmployeeCreateForm />} />
         <Route path="/employee" element={<EmployeeHome />} />
         <Route path="/incubator" element={<Incubator />} />
         <Route path="*" element={<ErrorPage />} />

@@ -1,0 +1,24 @@
+.placeholder {
+  display: flex;
+}
+.incubator_list {
+  top: 100px;
+  display: flex;
+  z-index: 1;
+  height: 70px;
+  align-items: center;
+  padding: 5px 45px;
+  background-color: e6eff5;
+  height: max-content;
+  position: sticky;
+  background-color: rgb(244, 245, 247);
+}
+.incubator_list li {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  padding: 10px;
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 500;
+}

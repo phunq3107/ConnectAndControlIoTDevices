@@ -39,7 +39,7 @@ function Charts({ tempSensor, soundSensor }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 5000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 6000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -53,8 +53,12 @@ function Charts({ tempSensor, soundSensor }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${tempSensor.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        const [, ...rest] = prevTempData.current
-                        setTempData([...rest, ...JSON.parse(result)])
+                        const [first, ...rest] = prevTempData.current
+                        if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
+                            setTempData([...rest, ...JSON.parse(result)])
+                        else {
+                            setTempData([...prevTempData.current, ...JSON.parse(result)])
+                        }
                     })
                     .catch(error => console.log('error', error));
             }
@@ -86,7 +90,7 @@ function Charts({ tempSensor, soundSensor }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 5000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 6000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -100,8 +104,12 @@ function Charts({ tempSensor, soundSensor }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${soundSensor.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        const [, ...rest] = prevSoundData.current
-                        setSoundData([...rest, ...JSON.parse(result)])
+                        const [first, ...rest] = prevSoundData.current
+                        if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
+                            setSoundData([...rest, ...JSON.parse(result)])
+                        else {
+                            setSoundData([...prevSoundData.current, ...JSON.parse(result)])
+                        }
                     })
                     .catch(error => console.log('error', error));
             }

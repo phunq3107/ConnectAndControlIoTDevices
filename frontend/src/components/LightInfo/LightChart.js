@@ -38,7 +38,7 @@ function LightChart({ light }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 6000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -52,8 +52,10 @@ function LightChart({ light }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${light.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        console.log(result)
                         const res = JSON.parse(result)
+                        while (res.length > 0 && prevData.current.length > 0 && res[0].createdAt === prevData.current[prevData.current.length-1].createdAt){
+                            res.shift()
+                        }
                         if (res.length > 0) {
                             const [first, ...rest] = prevData.current
                             if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))

@@ -39,7 +39,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 6000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -53,11 +53,17 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${tempSensor.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        const [first, ...rest] = prevTempData.current
-                        if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
-                            setTempData([...rest, ...JSON.parse(result)])
-                        else {
-                            setTempData([...prevTempData.current, ...JSON.parse(result)])
+                        const res = JSON.parse(result)
+                        while (res.length > 0 && prevTempData.current.length > 0 && res[0].createdAt === prevTempData.current[prevTempData.current.length - 1].createdAt) {
+                            res.shift()
+                        }
+                        if (res.length > 0) {
+                            const [first, ...rest] = prevTempData.current
+                            if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
+                                setTempData([...rest, ...res])
+                            else {
+                                setTempData([...prevTempData.current, ...res])
+                            }
                         }
                     })
                     .catch(error => console.log('error', error));
@@ -90,7 +96,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 6000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -104,11 +110,17 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                 fetch(`http://localhost:8080/api/v1/feeds/${soundSensor.key}/data?start_time=${now}`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        const [first, ...rest] = prevSoundData.current
-                        if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
-                            setSoundData([...rest, ...JSON.parse(result)])
-                        else {
-                            setSoundData([...prevSoundData.current, ...JSON.parse(result)])
+                        const res = JSON.parse(result)
+                        while (res.length > 0 && prevSoundData.current.length > 0 && res[0].createdAt === prevSoundData.current[prevSoundData.current.length - 1].createdAt) {
+                            res.shift()
+                        }
+                        if (res.length > 0) {
+                            const [first, ...rest] = prevSoundData.current
+                            if (first && (new Date(first.createdAt).getTime() - new Date().getTime > 10800000))
+                                setSoundData([...rest, ...res])
+                            else {
+                                setSoundData([...prevSoundData.current, ...res])
+                            }
                         }
                     })
                     .catch(error => console.log('error', error));
@@ -123,7 +135,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
             data: tempData,
             XdataKey: "createdAt",
             YdataKey: "value",
-            domain: [20,50],
+            domain: [20, 50],
             threshold: threshold
         },
         {
@@ -131,7 +143,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
             data: soundData,
             XdataKey: "createdAt",
             YdataKey: "value",
-            domain: [0,300]
+            domain: [0, 300]
         },
     ]
     if (tempData && soundData) {
@@ -142,10 +154,10 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                         key={chart.title}
                         title={chart.title}
                         data={chart.data}
-                        Ydomain = {chart.domain}
+                        Ydomain={chart.domain}
                         XdataKey={chart.XdataKey}
                         YdataKey={chart.YdataKey}
-                        threshold = {chart.threshold ? chart.threshold : null}
+                        threshold={chart.threshold ? chart.threshold : null}
                     />
                 )}
             </div>

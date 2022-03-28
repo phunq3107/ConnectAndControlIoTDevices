@@ -1,7 +1,6 @@
 import styles from './chart.module.css'
 import { LineChart, ResponsiveContainer, Tooltip, XAxis, Line, CartesianGrid, YAxis, ReferenceLine } from 'recharts'
 function Chart({ title, data, XdataKey, YdataKey, grid, Ydomain, threshold }) {
-    console.log(threshold)
     return (
         <div className={styles.chartContainer}>
             <h3 className={styles.title}>{title}</h3>

@@ -28,7 +28,6 @@ function EmployeeHome() {
                 })
                 .then(result => {
                     setIncubators(result)
-                    auth.setIncubators(result)
                 })
                 .catch(error => console.log('error', error))
         }

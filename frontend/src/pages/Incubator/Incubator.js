@@ -13,6 +13,7 @@ function Incubator() {
     const { incubatorKey } = location.state
     const auth = useContext(AuthContext)
     const [feeds, setFeeds] = useState()
+    const [currentThreshold,setCurrentThreshold] = useState({})
     useEffect(() => {
         const user = auth.getCurrentUser()
         if (user && user.access_token) {
@@ -39,6 +40,12 @@ function Incubator() {
             auth.logout()
         }
     }, [])
+    const handleThreshold = (upper,lower) =>{
+        setCurrentThreshold({
+            upper:upper,
+            lower:lower
+        })
+    }
     if (feeds) {
         const [light] = feeds.filter(feed=>feed.type ==="Light")
         const [tempSensor] = feeds.filter(feed=>feed.type ==="TemperatureSensor")
@@ -49,8 +56,8 @@ function Incubator() {
                 <div className={styles.container}>
                     <Sidebar />
                     <div className={styles.content}>
-                        <MeasuredInfo incubatorKey={incubatorKey} />
-                        <Charts tempSensor={tempSensor} soundSensor={soundSensor}/>
+                        <MeasuredInfo incubatorKey={incubatorKey} handleThreshold={handleThreshold} />
+                        <Charts tempSensor={tempSensor} soundSensor={soundSensor} threshold={currentThreshold}/>
                         <LightInfo light={light} incubatorKey={incubatorKey}/>
                         <Threshold incubatorKey={incubatorKey}/>
                     </div>

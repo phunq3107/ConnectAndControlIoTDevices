@@ -1,9 +1,15 @@
 import styles from "./measuredInfo.module.css"
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useContext, useState, useRef } from 'react'
 import { AuthContext } from "../../AuthContext"
-function MeasuredInfo({ incubatorKey }) {
+function MeasuredInfo({ incubatorKey, handleThreshold }) {
     const auth = useContext(AuthContext)
     const [incubatorInfo, setIncubatorInfo] = useState()
+
+    useEffect(() => {
+        if (incubatorInfo) {
+            handleThreshold(incubatorInfo.upperThreshold, incubatorInfo.lowerThreshold)
+        }
+    }, [incubatorInfo])
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()

@@ -2,7 +2,7 @@ import Chart from "./Chart"
 import styles from './chart.module.css'
 import { useEffect, useContext, useRef, useState } from 'react'
 import { AuthContext } from "../../AuthContext"
-function Charts({ tempSensor, soundSensor }) {
+function Charts({ tempSensor, soundSensor, threshold }) {
     const auth = useContext(AuthContext)
     const [tempData, setTempData] = useState([])
     const [soundData, setSoundData] = useState([])
@@ -123,19 +123,31 @@ function Charts({ tempSensor, soundSensor }) {
             data: tempData,
             XdataKey: "createdAt",
             YdataKey: "value",
+            domain: [20,50],
+            threshold: threshold
         },
         {
             title: "Biểu đồ âm thanh",
             data: soundData,
             XdataKey: "createdAt",
             YdataKey: "value",
+            domain: [0,300]
         },
     ]
     if (tempData && soundData) {
         return (
             <div className={styles.container}>
                 {charts.map(chart =>
-                    <Chart key={chart.title} title={chart.title} data={chart.data} XdataKey={chart.XdataKey} YdataKey={chart.YdataKey} />)}
+                    <Chart
+                        key={chart.title}
+                        title={chart.title}
+                        data={chart.data}
+                        Ydomain = {chart.domain}
+                        XdataKey={chart.XdataKey}
+                        YdataKey={chart.YdataKey}
+                        threshold = {chart.threshold ? chart.threshold : null}
+                    />
+                )}
             </div>
         )
     }

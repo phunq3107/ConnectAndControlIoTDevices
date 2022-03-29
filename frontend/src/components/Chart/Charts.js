@@ -39,7 +39,9 @@ function Charts({ tempSensor, soundSensor, threshold }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
+            const now = prevTempData.current && prevTempData.current < 1 ?
+                new Date(new Date().getTime() - 10000).toISOString().slice(0, -5) :
+                prevTempData.current[prevTempData.current.length - 1].createdAt
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -54,8 +56,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0 && prevTempData.current.length > 0 &&
-                            res.some(data => data.createdAt === prevTempData.current[prevTempData.current.length - 1].createdAt)) {
+                        if (res.length > 0 && prevTempData.current.length > 0) {
                             res.shift()
                         }
                         if (res.length > 0) {
@@ -97,7 +98,9 @@ function Charts({ tempSensor, soundSensor, threshold }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
+            const now = prevSoundData.current && prevSoundData.current.length < 1 ?
+                new Date(new Date().getTime() - 10000).toISOString().slice(0, -5) :
+                prevSoundData.current[prevSoundData.current.length - 1].createdAt
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -112,8 +115,7 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0 && prevSoundData.current.length > 0 &&
-                            res.some(data => data.createdAt === prevSoundData.current[prevSoundData.current.length - 1].createdAt)) {
+                        if (res.length > 0 && prevSoundData.current.length > 0) {
                             res.shift()
                         }
                         if (res.length > 0) {

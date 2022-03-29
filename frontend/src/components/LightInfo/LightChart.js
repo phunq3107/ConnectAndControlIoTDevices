@@ -6,7 +6,7 @@ import { LightDataFormatter } from './LightDataFormatter'
 function LightChart({ light }) {
     const auth = useContext(AuthContext)
     const [lightData, setLightData] = useState([])
-    const prevData = useRef()
+    const prevData = useRef([])
     useEffect(() => {
         prevData.current = lightData
     }, [lightData])
@@ -38,7 +38,9 @@ function LightChart({ light }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 11000).toISOString().slice(0, -5)
+            const now = prevData.current && prevData.current.length < 1 ?
+                new Date(new Date().getTime() - 11000).toISOString().slice(0, -5) :
+                prevData.current[prevData.current.length - 1].createdAt
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -53,10 +55,7 @@ function LightChart({ light }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0
-                            && prevData.current.length > 0
-                            && res.some(data => data.createdAt === prevData.current[prevData.current.length - 1].createdAt
-                                && data.value === prevData.current[prevData.current.length - 1].value)) {
+                        if (res.length > 0 && prevData.current.length > 0) {
                             res.shift()
                         }
                         if (res.length > 0) {

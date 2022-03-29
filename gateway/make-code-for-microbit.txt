@@ -1,0 +1,42 @@
+def SOUND_LCD():
+    if NPNBitKit.analog_sound(AnalogPin.P2) > 300:
+        serial.write_string("!1:SOUND:" + ("" + str(NPNBitKit.analog_sound(AnalogPin.P2))) + "#")
+        pins.digital_write_pin(DigitalPin.P4, 0)
+        pins.digital_write_pin(DigitalPin.P5, 1)
+        NPNLCD.show_string("DONE", 0, 0)
+    else:
+        pins.digital_write_pin(DigitalPin.P4, 0)
+        pins.digital_write_pin(DigitalPin.P5, 0)
+        NPNLCD.show_string("NONE", 0, 0)
+
+def on_data_received():
+    global cmd
+    cmd = serial.read_until(serial.delimiters(Delimiters.HASH))
+    if cmd == "0":
+        pins.digital_write_pin(DigitalPin.P4, 0)
+        pins.digital_write_pin(DigitalPin.P5, 0)
+    elif cmd == "1":
+        pins.digital_write_pin(DigitalPin.P4, 1)
+        pins.digital_write_pin(DigitalPin.P5, 0)
+serial.on_data_received(serial.delimiters(Delimiters.HASH), on_data_received)
+
+def TEMP():
+    global counter_lcd
+    counter_lcd += 1
+    if counter_lcd >= 50:
+        counter_lcd = 0
+        NPNBitKit.dht11_read(DigitalPin.P0)
+        if NPNBitKit.dht11_temp() >= 15 and NPNBitKit.dht11_temp() <= 60:
+            serial.write_string("!1:TEMP:" + str(NPNBitKit.dht11_temp()) + "#")
+            NPNLCD.show_string("TEMP: " + str(NPNBitKit.dht11_temp()), 0, 1)
+cmd = ""
+counter_lcd = 0
+led.enable(False)
+NPNLCD.lcd_init()
+counter_lcd = 0
+
+def on_forever():
+    SOUND_LCD()
+    TEMP()
+    basic.pause(100)
+basic.forever(on_forever)

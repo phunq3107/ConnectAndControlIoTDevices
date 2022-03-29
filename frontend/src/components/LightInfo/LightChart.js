@@ -98,7 +98,7 @@ function LightChart({ light }) {
                             tickFormatter={(value) => value === 1 ? 'ON' : 'OFF'}
                         />
                         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                        <Scatter data={lightData} fill="#5550bd" line />
+                        <Scatter data={lightData} fill="#5550bd" line shape={false} />
                     </ScatterChart>
                 </ResponsiveContainer>
             </div>

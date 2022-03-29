@@ -22,7 +22,8 @@ function Chart({ title, data, XdataKey, YdataKey, grid, Ydomain, threshold }) {
                     <Line
                         type="monotone"
                         dataKey={YdataKey}
-                        stroke="#5550bd" />
+                        stroke="#5550bd" 
+                        dot={false}/>
                     <Tooltip />
                     {grid && <CartesianGrid stroke="#e0dfdf" strokeDasharray="5 5" />}
                 </LineChart>

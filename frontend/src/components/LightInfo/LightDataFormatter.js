@@ -11,5 +11,12 @@ export const LightDataFormatter = (lightData, idx) => {
             }
         }
     }
+    else if (lightData && lightData.length === 1) {
+        const connectPoint = {
+            createdAt: lightData[0].createdAt,
+            value : lightData[0] === 1 ? 0 : 1
+        }
+        lightData.splice(0,0,connectPoint)
+    }
     return lightData
 }

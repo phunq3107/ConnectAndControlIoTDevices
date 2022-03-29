@@ -38,7 +38,7 @@ function LightChart({ light }) {
     useEffect(() => {
         const interval = setInterval(() => {
             const user = auth.getCurrentUser()
-            const now = new Date(new Date().getTime() - 10000).toISOString().slice(0, -5)
+            const now = new Date(new Date().getTime() - 11000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 var myHeaders = new Headers();
                 myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -53,7 +53,10 @@ function LightChart({ light }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0 && prevData.current.length > 0 && res[0].createdAt === prevData.current[prevData.current.length-1].createdAt){
+                        while (res.length > 0
+                            && prevData.current.length > 0
+                            && res.some(data => data.createdAt === prevData.current[prevData.current.length - 1].createdAt
+                                && data.value === prevData.current[prevData.current.length - 1].value)) {
                             res.shift()
                         }
                         if (res.length > 0) {
@@ -88,8 +91,8 @@ function LightChart({ light }) {
                             stroke="#5550bd"
                             allowDataOverflow={false}
                             allowDuplicatedCategory={false}
-                            tickFormatter={value=> value? value.substring(11) : 0}
-                            ticks={lightData.length > 0 ? [lightData[0].createdAt, lightData[lightData.length-1].createdAt] : null}
+                            tickFormatter={value => value ? value.substring(11) : 0}
+                            ticks={lightData.length > 0 ? [lightData[0].createdAt, lightData[lightData.length - 1].createdAt] : null}
                         />
                         <YAxis
                             dataKey="value"

@@ -54,7 +54,8 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0 && prevTempData.current.length > 0 && res[0].createdAt === prevTempData.current[prevTempData.current.length - 1].createdAt) {
+                        while (res.length > 0 && prevTempData.current.length > 0 &&
+                            res.some(data => data.createdAt === prevTempData.current[prevTempData.current.length - 1].createdAt)) {
                             res.shift()
                         }
                         if (res.length > 0) {
@@ -111,7 +112,8 @@ function Charts({ tempSensor, soundSensor, threshold }) {
                     .then(response => response.text())
                     .then(result => {
                         const res = JSON.parse(result)
-                        while (res.length > 0 && prevSoundData.current.length > 0 && res[0].createdAt === prevSoundData.current[prevSoundData.current.length - 1].createdAt) {
+                        while (res.length > 0 && prevSoundData.current.length > 0 &&
+                            res.some(data => data.createdAt === prevSoundData.current[prevSoundData.current.length - 1].createdAt)) {
                             res.shift()
                         }
                         if (res.length > 0) {

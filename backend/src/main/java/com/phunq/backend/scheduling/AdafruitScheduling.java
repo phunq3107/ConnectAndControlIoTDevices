@@ -4,8 +4,10 @@ import com.phunq.backend.adafruit.AdafruitService;
 import com.phunq.backend.adafruit.dto.FeedDto;
 import com.phunq.backend.service.AutomationService;
 import com.phunq.backend.service.HandleResponseService;
+
 import java.io.IOException;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.PropertySource;
@@ -22,17 +24,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdafruitScheduling {
 
-  private final long interval = 5000L;
+    private final long interval = 5000L;
 
-  private final AdafruitService adafruitService;
-  private final HandleResponseService handleResponseService;
+    private final AdafruitService adafruitService;
+    private final HandleResponseService handleResponseService;
 
 
-
-  @Scheduled(fixedRate = interval)
-  void getFeedFromAdafruitServer() throws IOException {
-    List<FeedDto> feeds = adafruitService.getAllFeeds();
-    handleResponseService.handleGetFeedsResult(feeds);
-  }
+    @Scheduled(fixedRate = interval)
+    void getFeedFromAdafruitServer() throws IOException {
+        List<FeedDto> feeds = adafruitService.getAllFeeds();
+        handleResponseService.handleGetFeedsResult(feeds);
+    }
 
 }

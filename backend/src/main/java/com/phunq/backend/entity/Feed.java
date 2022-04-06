@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 import lombok.Data;
 
 /**
@@ -18,40 +19,40 @@ import lombok.Data;
 @Data
 public class Feed {
 
-  @Id
-  private String id;
-  private String name;
-  @Column(unique = true)
-  private String key;
-  @Enumerated(EnumType.STRING)
-  private FeedType type;
-  private String currentValue;
-  private LocalDateTime createAt;
-  private LocalDateTime lastTimeGetData;
+    @Id
+    private String id;
+    private String name;
+    @Column(unique = true)
+    private String key;
+    @Enumerated(EnumType.STRING)
+    private FeedType type;
+    private String currentValue;
+    private LocalDateTime createAt;
+    private LocalDateTime lastTimeGetData;
 
-  @ManyToOne
-  @JoinColumn(name = "GROUP_ID")
-  private FeedGroup feedGroup;
+    @ManyToOne
+    @JoinColumn(name = "GROUP_ID")
+    private FeedGroup feedGroup;
 
-  public boolean isLight() {
-    return this.type == FeedType.Light;
-  }
+    public boolean isLight() {
+        return this.type == FeedType.Light;
+    }
 
-  public boolean isScreen() {
-    return this.type == FeedType.Screen;
-  }
+    public boolean isScreen() {
+        return this.type == FeedType.Screen;
+    }
 
-  public boolean isTemperatureSensor() {
-    return this.type == FeedType.TemperatureSensor;
-  }
+    public boolean isTemperatureSensor() {
+        return this.type == FeedType.TemperatureSensor;
+    }
 
-  public boolean isSoundSensor() {
-    return this.type == FeedType.SoundSensor;
-  }
+    public boolean isSoundSensor() {
+        return this.type == FeedType.SoundSensor;
+    }
 
-  public Integer getCurrentValueAsInt(){
-    return Integer.parseInt(this.currentValue);
-  }
+    public Integer getCurrentValueAsInt() {
+        return Integer.parseInt(this.currentValue);
+    }
 
 
 }

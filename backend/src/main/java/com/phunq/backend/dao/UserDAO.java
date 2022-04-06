@@ -7,5 +7,5 @@ import com.phunq.backend.entity.User;
  * @since 3/4/2022
  */
 public interface UserDAO extends GenericDAO<User, Long> {
-  public User findByUsername(String username);
+    public User findByUsername(String username);
 }

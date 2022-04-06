@@ -3,6 +3,7 @@ package com.phunq.backend.controller.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,10 +15,10 @@ import lombok.Data;
 @Builder
 public class GetUserResponse {
 
-  private String username;
-  private String fullname;
-  private LocalDate dob;
-  private Boolean enable = true;
-  private List<String> groups = new ArrayList<>();
+    private String username;
+    private String fullname;
+    private LocalDate dob;
+    private Boolean enable = true;
+    private List<String> groups = new ArrayList<>();
 
 }

@@ -1,6 +1,7 @@
 package com.phunq.backend.adafruit.dto;
 
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
@@ -9,12 +10,12 @@ import lombok.Data;
  */
 @Data
 public class FeedValueDto {
-  private String id;
-  private String value;
-  private String feed_id;
-  private String feed_key;
-  private LocalDateTime created_at;
-  private String created_epoch;
-  private LocalDateTime expiration;
+    private String id;
+    private String value;
+    private String feed_id;
+    private String feed_key;
+    private LocalDateTime created_at;
+    private String created_epoch;
+    private LocalDateTime expiration;
 
 }

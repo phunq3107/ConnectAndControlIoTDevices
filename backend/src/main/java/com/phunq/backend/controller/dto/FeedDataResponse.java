@@ -1,6 +1,7 @@
 package com.phunq.backend.controller.dto;
 
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
 @Data
 public class FeedDataResponse {
 
-  private String value;
-  private LocalDateTime createdAt;
+    private String value;
+    private LocalDateTime createdAt;
 
 }

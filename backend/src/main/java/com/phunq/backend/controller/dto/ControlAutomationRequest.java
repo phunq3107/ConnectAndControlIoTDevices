@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class ControlAutomationRequest {
 
-  private String key;
-  private Boolean value;
+    private String key;
+    private Boolean value;
 
 }

@@ -1,6 +1,7 @@
 package com.phunq.backend.adafruit.dto;
 
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
@@ -9,9 +10,9 @@ import lombok.Data;
  */
 @Data
 public class FeedGroupDto {
-  private String id;
-  private String key;
-  private String name;
-  private String description;
-  private LocalDateTime created_at;
+    private String id;
+    private String key;
+    private String name;
+    private String description;
+    private LocalDateTime created_at;
 }

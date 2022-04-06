@@ -1,17 +1,18 @@
 package com.phunq.backend.service.entity;
 
+import com.phunq.backend.adafruit.AdafruitService;
 import com.phunq.backend.adafruit.dto.FeedValueDto;
-import com.phunq.backend.controller.exception.CustomForbiddenException;
-import com.phunq.backend.controller.exception.CustomNotFoundException;
-import com.phunq.backend.dao.FeedDAO;
+import com.phunq.backend.exception.CustomForbiddenException;
+import com.phunq.backend.exception.CustomNotFoundException;
 import com.phunq.backend.dao.FeedValueDAO;
 import com.phunq.backend.entity.Feed;
 import com.phunq.backend.entity.FeedValue;
-import com.phunq.backend.controller.dto.FeedDataResponse;
 import com.phunq.backend.service.MapperService;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FeedValueService {
 
-  private final FeedService feedService;
-  private final FeedValueDAO feedValueDAO;
-  private final MapperService mapperService;
+    private final FeedService feedService;
+    private final FeedValueDAO feedValueDAO;
+    private final AdafruitService adafruitService;
+    private final LogService logService;
 
-  public FeedValue save(FeedValue feedValue){
-    return feedValueDAO.makePersistence(feedValue);
-  }
+    public FeedValue save(FeedValue feedValue) {
+        return feedValueDAO.makePersistence(feedValue);
+    }
 
 //  public FeedValue addFeedValue(FeedValueDto feedValueDto) throws CustomNotFoundException {
 //    if (feedValueDto.getFeed_id() == null) {
@@ -42,22 +44,28 @@ public class FeedValueService {
 //    return addFeedValue(feedValueDto, feed);
 //  }
 
-  public FeedValue addFeedValue(FeedValueDto feedValueDto, Feed feed) {
-    FeedValue feedValue = new FeedValue();
-    feedValue.setId(feedValueDto.getId());
-    feedValue.setValue(feedValueDto.getValue());
-    feedValue.setFeed(feed);
-    feedValue.setCreatedAt(feedValueDto.getCreated_at());
-    feedValue.setExpiration(feedValueDto.getExpiration());
-    feedValue.setCreatedEpoch(feedValueDto.getCreated_epoch());
-    return save(feedValue);
-  }
+    public FeedValue addFeedValue(FeedValueDto feedValueDto, Feed feed) {
+        FeedValue feedValue = new FeedValue();
+        feedValue.setId(feedValueDto.getId());
+        feedValue.setValue(feedValueDto.getValue());
+        feedValue.setFeed(feed);
+        feedValue.setCreatedAt(feedValueDto.getCreated_at());
+        feedValue.setExpiration(feedValueDto.getExpiration());
+        feedValue.setCreatedEpoch(feedValueDto.getCreated_epoch());
+        return save(feedValue);
+    }
 
-  public List<FeedValue> findAllByStartAndEndTime(
-      String feedKey, LocalDateTime startTime, LocalDateTime endTime)
-      throws CustomNotFoundException, CustomForbiddenException {
-    feedService.findByKey(feedKey);
-    return feedValueDAO.getFeedValue(feedKey, startTime, endTime);
-  }
+    public List<FeedValue> findAllByStartAndEndTime(
+            String feedKey, LocalDateTime startTime, LocalDateTime endTime)
+            throws CustomNotFoundException, CustomForbiddenException {
+        feedService.findByKey(feedKey);
+        return feedValueDAO.getFeedValue(feedKey, startTime, endTime);
+    }
+
+    public void addFeedValue(String feedKey, String data) throws IOException {
+        Feed feed = feedService.findByKey(feedKey);
+        adafruitService.addFeedValue(feedKey, data);
+        logService.createControlLightLog(feed.getFeedGroup().getKey(), feed.getCurrentValue(), data);
+    }
 
 }

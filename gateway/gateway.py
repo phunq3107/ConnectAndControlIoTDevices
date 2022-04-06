@@ -1,4 +1,5 @@
 import sys
+import random
 
 import serial.tools.list_ports
 from Adafruit_IO import MQTTClient
@@ -6,15 +7,23 @@ from utils import logger
 
 
 class Gateway:
+    TEMPERATURE_SENSOR = 'Temperature sensor'
+    SOUND_SENSOR = 'Sound sensor'
+    LIGHT = 'Light'
+    SCREEN = 'Screen'
+
     def __init__(self, username, aio_key, feeds):
         self.feeds = feeds
         self.isMicrobitConnected = False
         self.serial = None
         self.msg = ''
 
-        if self.getPort():
-            self.serial = serial.Serial(port=self.getPort(), baudrate=115200)
+        try:
+            if self.getPort():
+                self.serial = serial.Serial(port=self.getPort(), baudrate=115200)
             self.isMicrobitConnected = True
+        except Exception as e:
+            logger.error(e)
 
         self.client = MQTTClient(username, aio_key)
         self.client.on_connect = self.connected
@@ -27,6 +36,7 @@ class Gateway:
     def connected(self, client):
         logger.info("Connect successful...")
         for feed in self.feeds:
+            logger.info(f"Subscribe {feed}")
             client.subscribe(feed)
 
     def subscribe(self, client, userdata, mid, granted_qos):
@@ -37,7 +47,11 @@ class Gateway:
         sys.exit(1)
 
     def message(self, client, feed_id, payload):
-        logger.info(f"Receive data: [key='{feed_id}', data='{payload}']")
+        if self.getSensorType(feed_id) == Gateway.SCREEN:
+            # format: [username, noOfActiveDays,noEgg,hatchedEgg,currentTemp]
+            payload = self.decodeScreenMessage(payload)
+        # todo: update code for display on LCD monitor
+        logger.info(f"Receive data: [device='{self.getSensorType(feed_id)}', data='{payload}']")
         if self.isMicrobitConnected:
             self.serial.write((str(payload) + "#").encode())
 
@@ -80,6 +94,25 @@ class Gateway:
                     self.msg = ""
                 else:
                     self.msg = self.msg[end + 1:]
+
+    def decodeScreenMessage(self, message):
+        retval = ""
+        for i in range(1, len(message), 3):
+            retval += chr(int(message[i:i + 3]))
+        return retval.split(',')
+
+    def sendFakeData(self):
+        self.client.publish(self.getTemperatureSensor(), random.randint(27, 43))
+
+    def getSensorType(self, key):
+        if 'li' in key:
+            return Gateway.LIGHT
+        elif 'te' in key:
+            return Gateway.TEMPERATURE_SENSOR
+        elif 'so' in key:
+            return Gateway.SOUND_SENSOR
+        elif 'sc' in key:
+            return Gateway.SCREEN
 
     def getLight(self):
         for feed in self.feeds:

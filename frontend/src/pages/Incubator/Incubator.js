@@ -3,63 +3,156 @@ import Sidebar from "../../components/Sidebar/Sidebar"
 import styles from "./incubator.module.css"
 import Navbar from "../../components/Navbar/Navbar"
 import Charts from "../../components/Chart/Charts"
-import { useLocation } from "react-router-dom"
-import LightInfo from "../../components/LightInfo/LightInfo"
-import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from "../../AuthContext"
 import Threshold from "../../components/Threshold/Threshold"
+import LightInfo from "../../components/LightInfo/LightInfo"
+import { useLocation } from "react-router-dom"
+import { useContext, useEffect, useState, useRef } from 'react'
+import { AuthContext } from "../../services/authorization/AuthContext"
+import { getAllFeedsInGroup, getGroupInfo, setLightAutomation } from "../../services/groupsAPI"
+import { getFeedData, setLightState } from "../../services/feedsAPI"
+import { formatLightData, handleNewData } from "../../services/datahandler"
 function Incubator() {
     const location = useLocation()
     const { incubatorKey } = location.state
     const auth = useContext(AuthContext)
+
     const [feeds, setFeeds] = useState()
-    const [currentThreshold,setCurrentThreshold] = useState({})
+    const [incubatorInfo, setIncubatorInfo] = useState()
+    const [tempData, setTempData] = useState([])
+    const [soundData, setSoundData] = useState([])
+    const [lightData, setLightData] = useState([])
+
+    const light = useRef()
+    const tempSensor = useRef()
+    const soundSensor = useRef()
+
+    const prevLightData = useRef([])
+    useEffect(() => {
+        prevLightData.current = lightData
+    }, [lightData])
+
+    const prevTempData = useRef()
+    useEffect(() => {
+        prevTempData.current = tempData
+    }, [tempData])
+
+    const prevSoundData = useRef()
+    useEffect(() => {
+        prevSoundData.current = soundData
+    }, [soundData])
     useEffect(() => {
         const user = auth.getCurrentUser()
         if (user && user.access_token) {
-            var myHeaders = new Headers();
-            myHeaders.append("Authorization", `Bearer ${user.access_token}`);
-            var requestOptions = {
-                method: 'GET',
-                headers: myHeaders,
-                redirect: 'follow'
-            };
-            fetch(`http://localhost:8080/api/v1/groups/${incubatorKey}/feeds`, requestOptions)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json()
-                    }
-                    throw new Error(response.status)
-                })
-                .then(result => {
-                    setFeeds(result)
-                })
-                .catch(error => console.log('error', error))
+            getAllFeedsInGroup(user, incubatorKey).then(feeds => {
+                setFeeds(feeds)
+            })
+            getGroupInfo(user, incubatorKey).then(info => {
+                setIncubatorInfo(info)
+            })
         }
         else {
             auth.logout()
         }
     }, [])
-    const handleThreshold = (upper,lower) =>{
-        setCurrentThreshold({
-            upper:upper,
-            lower:lower
-        })
+    useEffect(() => {
+        const user = auth.getCurrentUser()
+        if (feeds) {
+            light.current = feeds.filter(feed => feed.type === "Light")[0]
+            tempSensor.current = feeds.filter(feed => feed.type === "TemperatureSensor")[0]
+            soundSensor.current = feeds.filter(feed => feed.type === "SoundSensor")[0]
+            const threeHoursAgo = new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString().slice(0, -5)
+            if (user && user.access_token) {
+                getFeedData(user, tempSensor.current, threeHoursAgo).then(data => {
+                    setTempData(data)
+                })
+                getFeedData(user, soundSensor.current, threeHoursAgo).then(data => {
+                    setSoundData(data)
+                })
+                getFeedData(user, light.current, threeHoursAgo).then(data => {
+                    setLightData((prev) => {
+                        return formatLightData(data, 0)
+                    })
+                })
+            }
+            else auth.logout()
+        }
+    }, [feeds])
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const user = auth.getCurrentUser()
+            if (user && user.access_token) {
+                getGroupInfo(user, incubatorKey).then(info => {
+                    setIncubatorInfo(info)
+                })
+                if (light.current && prevLightData.current) {
+                    const now = prevLightData.current && prevLightData.current.length < 1 ?
+                        new Date(new Date().getTime() - 11000).toISOString().slice(0, -5) :
+                        prevLightData.current[prevLightData.current.length - 1].createdAt
+                    getFeedData(user, light.current, now).then(data => {
+                        handleNewData(prevLightData.current, data, true, setLightData)
+                    })
+                }
+                if (soundSensor.current && prevSoundData.current) {
+                    const now = prevSoundData.current.length < 1 ?
+                        new Date(new Date().getTime() - 10000).toISOString().slice(0, -5) :
+                        prevSoundData.current[prevSoundData.current.length - 1].createdAt
+                    getFeedData(user, soundSensor.current, now).then(data => {
+                        handleNewData(prevSoundData.current, data, false, setSoundData)
+                    })
+                }
+                if (tempSensor.current && prevTempData.current) {
+                    const now = prevTempData.current.length < 1 ?
+                        new Date(new Date().getTime() - 10000).toISOString().slice(0, -5) :
+                        prevTempData.current[prevTempData.current.length - 1].createdAt
+                    getFeedData(user, tempSensor.current, now).then(data => {
+                        handleNewData(prevTempData.current, data, false, setTempData)
+                    })
+                }
+            }
+            else auth.logout()
+        }, 5000)
+        return () => clearInterval(interval)
+    }, [])
+    const handleLightState = () => {
+        const user = auth.getCurrentUser()
+        if (user && user.access_token) {
+            setLightState(user, light.current, incubatorInfo)
+        }
+        else auth.logout()
     }
-    if (feeds) {
-        const [light] = feeds.filter(feed=>feed.type ==="Light")
-        const [tempSensor] = feeds.filter(feed=>feed.type ==="TemperatureSensor")
-        const [soundSensor] = feeds.filter(feed=>feed.type ==="SoundSensor")
-        return (
+    const handleAutomation = () => {
+        const user = auth.getCurrentUser()
+        if (user && user.access_token) {
+            setLightAutomation(user, incubatorKey, incubatorInfo)
+        }
+        else auth.logout()
+    }
+    if (feeds && incubatorInfo) {
+        return ( feeds && incubatorInfo &&
             <>
-                <Navbar incubatorKey={incubatorKey}/>
+                <Navbar incubatorKey={incubatorKey} />
                 <div className={styles.container}>
                     <Sidebar />
                     <div className={styles.content}>
-                        <MeasuredInfo incubatorKey={incubatorKey} handleThreshold={handleThreshold} />
-                        <Charts tempSensor={tempSensor} soundSensor={soundSensor} threshold={currentThreshold}/>
-                        <LightInfo light={light} incubatorKey={incubatorKey}/>
-                        <Threshold incubatorKey={incubatorKey}/>
+                        <MeasuredInfo
+                            incubatorInfo={incubatorInfo}
+                        />
+                        <Charts
+                            tempData={tempData}
+                            soundData={soundData}
+                            threshold={{upper:incubatorInfo.upperThreshold, lower: incubatorInfo.lowerThreshold}}
+                        />
+                        <LightInfo
+                            light={light.current}
+                            incubatorInfo={incubatorInfo}
+                            lightData={lightData}
+                            incubatorKey={incubatorKey}
+                            handleLightState = {handleLightState}
+                            handleAutomation = {handleAutomation}
+                        />
+                        <Threshold
+                            incubatorKey={incubatorKey}
+                        />
                     </div>
                 </div>
             </>

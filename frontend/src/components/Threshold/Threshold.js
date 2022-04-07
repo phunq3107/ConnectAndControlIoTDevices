@@ -1,7 +1,8 @@
 import styles from './threshold.module.css'
 import { useState, useContext } from 'react'
 import LoginInput from './../LoginForm/LoginInput'
-import { AuthContext } from '../../AuthContext'
+import { AuthContext } from '../../services/authorization/AuthContext'
+import { setThreshold } from '../../services/groupsAPI'
 function Threshold({ incubatorKey }) {
     const [upper, setUpper] = useState()
     const [lower, setLower] = useState()
@@ -10,30 +11,10 @@ function Threshold({ incubatorKey }) {
         if (lower && upper && lower <= upper) {
             const user = auth.getCurrentUser()
             if (user && user.access_token) {
-                var myHeaders = new Headers();
-                myHeaders.append("Authorization", `Bearer ${user.access_token}`)
-                myHeaders.append("Content-Type", "application/json");
-
-                var raw = JSON.stringify({
-                    "lower": lower,
-                    "upper": upper
-                });
-
-                var requestOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow'
-                };
-
-                fetch(`http://localhost:8080/api/v1/groups/${incubatorKey}/threshold`, requestOptions)
-                    .then(response => response.text())
-                    .then(result => {
-                        console.log("thay doi nguong")
-                        setUpper()
-                        setLower()
-                    })
-                    .catch(error => console.log('error', error));
+                setThreshold(user, incubatorKey, upper, lower).then(res => {
+                    setUpper()
+                    setLower()
+                })
             }
             else auth.logout()
         }

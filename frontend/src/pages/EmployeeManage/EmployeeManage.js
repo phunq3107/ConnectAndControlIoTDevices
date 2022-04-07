@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { AuthContext } from "../../../AuthContext"
-import AdminNavbar from "../../../components/Navbar/AdminNavbar"
-import AdminSidebar from "../../../components/Sidebar/AdminSidebar"
+import { AuthContext } from "../../services/authorization/AuthContext"
+import AdminNavbar from "../../components/Navbar/AdminNavbar"
+import AdminSidebar from "../../components/Sidebar/AdminSidebar"
 import styles from './EmployeeManage.module.css'
 
 export default function EmployeeManage() {

@@ -1,5 +1,5 @@
 import styles from './navbar.module.css'
-import { AuthContext } from '../../AuthContext'
+import { AuthContext } from '../../services/authorization/AuthContext'
 import { useContext } from 'react'
 function Navbar({ incubatorKey }) {
     const auth = useContext(AuthContext)

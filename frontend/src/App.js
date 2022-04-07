@@ -4,12 +4,12 @@ import LoginForm from './components/LoginForm/LoginForm';
 import { Routes, Route, useNavigate} from 'react-router-dom'
 import ErrorPage from './ErrorPage';
 import Incubator from './pages/Incubator/Incubator';
-import EmployeeHome from './pages/Incubator/EmployeeHome/EmployeeHome';
-import { AuthContext } from './AuthContext';
+import EmployeeHome from './pages/EmployeeHome/EmployeeHome';
+import { AuthContext } from './services/authorization/AuthContext';
 import { useContext,useEffect } from 'react';
-import AdminHome from './pages/Incubator/AdminHome/AdminHome';
-import EmployeeManage from './pages/Incubator/EmployeeManage/EmployeeManage';
-import EmployeeCreateForm from './pages/Incubator/EmployeeManage/EmployeeCreateForm';
+import AdminHome from './pages/AdminHome/AdminHome';
+import EmployeeManage from './pages/EmployeeManage/EmployeeManage';
+import EmployeeCreateForm from './pages/EmployeeManage/EmployeeCreateForm';
 function App() {
   const auth = useContext(AuthContext)
   const navigate = useNavigate()

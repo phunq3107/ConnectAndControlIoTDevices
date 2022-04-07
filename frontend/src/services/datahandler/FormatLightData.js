@@ -1,4 +1,6 @@
-export const LightDataFormatter = (lightData, idx) => {
+const FormatLightData = (lightData, idx) => {
+    if (idx < 0)
+        idx = 0
     if (lightData && lightData.length > 1) {
         for (var i = idx; i < lightData.length - 1; i++) {
             if (lightData[i + 1].value !== lightData[i].value && lightData[i + 1].createdAt !== lightData[i].createdAt) {
@@ -20,3 +22,4 @@ export const LightDataFormatter = (lightData, idx) => {
     }
     return lightData
 }
+export default FormatLightData

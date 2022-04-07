@@ -1,16 +1,17 @@
 import { useContext, useState, useEffect } from 'react'
-import { AuthContext } from '../../../AuthContext'
-import styles from './employeeHome.module.css'
+import { AuthContext } from '../../services/authorization/AuthContext'
+import styles from './AdminHome.module.css'
 import { Link } from 'react-router-dom'
-function EmployeeHome() {
+import Navbar from '../../components/Navbar/Navbar'
+import AdminSidebar from '../../components/Sidebar/AdminSidebar'
+import AdminNavbar from '../../components/Navbar/AdminNavbar'
+export default function AdminHome() {
     const auth = useContext(AuthContext)
     const [incubators, setIncubators] = useState([])
     useEffect(() => {
         const user = auth.getCurrentUser()
-        if (!(user && user.access_token)) {
-            auth.logout()
-        }
-        else {
+        if (user && user.access_token && user.role == 'ADMIN') {
+            
             var myHeaders = new Headers()
             myHeaders.append("Authorization", `Bearer ${user.access_token}`)
             var requestOptions = {
@@ -28,16 +29,24 @@ function EmployeeHome() {
                 })
                 .then(result => {
                     setIncubators(result)
+                    auth.setIncubators(result)
                 })
                 .catch(error => console.log('error', error))
+        } else {
+            auth.logout()
         }
     }, [])
-    if (incubators)
-        return (
-            <div className={styles.container}>
-                {incubators.map(incubator => <Link key={incubator.key} to="/incubator" state={{ incubatorKey: incubator.key }}>{incubator.name}</Link>)}
+    return (
+        <div>
+            <AdminNavbar home/>
+            <div className={styles.incubator_list}>
+                {incubators.map(incubator => <li><Link key={incubator.key} to="/incubator" state={{ incubatorKey: incubator.key }}>{incubator.name}</Link></li>)}
             </div>
-        )
-    else return null
+            <div className={styles.placeholder}>
+                <AdminSidebar/>
+                <img src="/logo512.png" style={{flex:4,width:'100%'}}/>
+            </div>
+            
+        </div>
+    )
 }
-export default EmployeeHome

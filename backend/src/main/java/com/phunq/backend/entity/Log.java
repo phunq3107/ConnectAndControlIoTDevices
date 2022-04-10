@@ -9,20 +9,16 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Log {
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ActionType action;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private ActionType action;
 
-    @CreationTimestamp
-    private LocalDateTime timestamp;
+  @CreationTimestamp private LocalDateTime timestamp;
 
-    private String description;
+  private String description;
 
-    @Column(nullable = false)
-    private String username;
-
+  @Column(nullable = false)
+  private String username;
 }

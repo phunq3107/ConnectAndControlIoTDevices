@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class UpdateUserRequest {
-    String password = null;
-    LocalDate dob = null;
-    String fullname = null;
+  String password = null;
+  LocalDate dob = null;
+  String fullname = null;
 }

@@ -27,46 +27,49 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationProvider authenticationProvider;
+  private final AuthenticationProvider authenticationProvider;
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException {
-        if (MyApplicationContext.getAuthentication() != null) {
-            return MyApplicationContext.getAuthentication();
-        }
-        String username = request.getParameter(getUsernameParameter());
-        String password = request.getParameter(getPasswordParameter());
-        if (username == null || password == null) {
-            throw new BadCredentialsException("Username and password are required");
-        }
-        return authenticationProvider.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        username, password
-                )
-        );
+  @Override
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    if (MyApplicationContext.getAuthentication() != null) {
+      return MyApplicationContext.getAuthentication();
     }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        MyApplicationContext.setCurrentUser(authResult);
-        chain.doFilter(request, response);
+    String username = request.getParameter(getUsernameParameter());
+    String password = request.getParameter(getPasswordParameter());
+    if (username == null || password == null) {
+      throw new BadCredentialsException("Username and password are required");
     }
+    return authenticationProvider.authenticate(
+        new UsernamePasswordAuthenticationToken(username, password));
+  }
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                              HttpServletResponse response, AuthenticationException failed)
-            throws IOException, ServletException {
-        response.setStatus(SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.getOutputStream().println(
-                new ObjectMapper().writeValueAsString(
-                        new TreeMap<>() {{
-                            put("message", failed.getMessage());
-                        }}
-                )
+  @Override
+  protected void successfulAuthentication(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain chain,
+      Authentication authResult)
+      throws IOException, ServletException {
+    MyApplicationContext.setCurrentUser(authResult);
+    chain.doFilter(request, response);
+  }
 
-        );
-    }
+  @Override
+  protected void unsuccessfulAuthentication(
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
+      throws IOException, ServletException {
+    response.setStatus(SC_UNAUTHORIZED);
+    response.setContentType("application/json");
+    response
+        .getOutputStream()
+        .println(
+            new ObjectMapper()
+                .writeValueAsString(
+                    new TreeMap<>() {
+                      {
+                        put("message", failed.getMessage());
+                      }
+                    }));
+  }
 }

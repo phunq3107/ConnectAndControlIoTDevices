@@ -11,18 +11,17 @@ import lombok.EqualsAndHashCode;
 @Data
 public class CustomForbiddenException extends RuntimeException {
 
-    private String username;
-    private String resources;
+  private String username;
+  private String resources;
 
-    public CustomForbiddenException(String username, String resources) {
-        this.username = username;
-        this.resources = resources;
-    }
+  public CustomForbiddenException(String username, String resources) {
+    this.username = username;
+    this.resources = resources;
+  }
 
-    @Override
-    public String getMessage() {
-        return String.format(
-                "User [username=%s] doesn't have permission to access %s", username, resources
-        );
-    }
+  @Override
+  public String getMessage() {
+    return String.format(
+        "User [username=%s] doesn't have permission to access %s", username, resources);
+  }
 }

@@ -10,9 +10,9 @@ import lombok.Data;
  */
 @Data
 public class FeedGroupDto {
-    private String id;
-    private String key;
-    private String name;
-    private String description;
-    private LocalDateTime created_at;
+  private String id;
+  private String key;
+  private String name;
+  private String description;
+  private LocalDateTime created_at;
 }

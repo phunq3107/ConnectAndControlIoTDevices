@@ -9,10 +9,8 @@ import lombok.Data;
 @Data
 public class FeedResponse {
 
-    private String key;
-    private String name;
-    private String type;
-    private String currentValue;
-
-
+  private String key;
+  private String name;
+  private String type;
+  private String currentValue;
 }

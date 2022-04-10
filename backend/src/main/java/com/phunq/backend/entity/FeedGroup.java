@@ -21,78 +21,69 @@ import lombok.Data;
 @Data
 public class FeedGroup {
 
-    @Id
-    private String id;
-    private String key;
-    private String name;
-    private String description;
-    private LocalDateTime startTime;
-    private Integer noEgg;
-    //    private Integer lowerTemperatureThreshold;
-//    private Integer upperTemperatureThreshold;
-    private LocalDateTime createdAt;
-    private Boolean enableAutomation = true;
+  @Id private String id;
+  private String key;
+  private String name;
+  private String description;
+  private LocalDateTime startTime;
+  private Integer noEgg;
+  //    private Integer lowerTemperatureThreshold;
+  //    private Integer upperTemperatureThreshold;
+  private LocalDateTime createdAt;
+  private Boolean enableAutomation = true;
 
-    @ManyToOne
-    @JoinColumn
-    private TemperatureThreshold threshold;
+  @ManyToOne @JoinColumn private TemperatureThreshold threshold;
 
-    @OneToMany(mappedBy = "feedGroup", fetch = FetchType.EAGER)
-    private List<Feed> feeds = new ArrayList<>();
+  @OneToMany(mappedBy = "feedGroup", fetch = FetchType.EAGER)
+  private List<Feed> feeds = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "USER_ID")
+  private User user;
 
-    public Integer[] getCurrentThreshold() {
-        if (threshold == null || startTime == null) {
-            return new Integer[]{30, 40};
-        }
-        long dayBetween = getNumberOfActiveDay();
-        if (dayBetween <= threshold.getNumberDayOfStage1()) {
-            return new Integer[]{threshold.getLowerStage1(), threshold.getUpperStage1()};
-        }
-        if (dayBetween <= threshold.getNumberDayOfStage1() + threshold.getNumberDayOfStage2()) {
-            return new Integer[]{threshold.getLowerStage2(), threshold.getUpperStage2()};
-        }
-        return new Integer[]{threshold.getLowerStage3(), threshold.getUpperStage3()};
+  public Integer[] getCurrentThreshold() {
+    if (threshold == null || startTime == null) {
+      return new Integer[] {30, 40};
     }
-
-    public Long getNumberOfActiveDay() {
-        if(startTime == null){
-            return -1L;
-        }
-        return Duration.between(LocalDateTime.now(), startTime).toDays();
+    long dayBetween = getNumberOfActiveDay();
+    if (dayBetween <= threshold.getNumberDayOfStage1()) {
+      return new Integer[] {threshold.getLowerStage1(), threshold.getUpperStage1()};
     }
-
-    public Feed getLight() {
-        return getDevice(FeedType.Light);
+    if (dayBetween <= threshold.getNumberDayOfStage1() + threshold.getNumberDayOfStage2()) {
+      return new Integer[] {threshold.getLowerStage2(), threshold.getUpperStage2()};
     }
+    return new Integer[] {threshold.getLowerStage3(), threshold.getUpperStage3()};
+  }
 
-    public Feed getScreen() {
-        return getDevice(FeedType.Screen);
+  public Long getNumberOfActiveDay() {
+    if (startTime == null) {
+      return -1L;
     }
+    return Duration.between(LocalDateTime.now(), startTime).toDays();
+  }
 
-    public Feed getSoundSensor() {
-        return getDevice(FeedType.SoundSensor);
+  public Feed getLight() {
+    return getDevice(FeedType.Light);
+  }
+
+  public Feed getScreen() {
+    return getDevice(FeedType.Screen);
+  }
+
+  public Feed getSoundSensor() {
+    return getDevice(FeedType.SoundSensor);
+  }
+
+  public Feed getTemperatureSensor() {
+    return getDevice(FeedType.TemperatureSensor);
+  }
+
+  public Feed getDevice(FeedType feedType) {
+    for (Feed feed : feeds) {
+      if (feed.getType() == feedType) {
+        return feed;
+      }
     }
-
-    public Feed getTemperatureSensor() {
-        return getDevice(FeedType.TemperatureSensor);
-    }
-
-    public Feed getDevice(FeedType feedType) {
-        for (Feed feed : feeds) {
-            if (feed.getType() == feedType) {
-                return feed;
-            }
-        }
-        return null;
-    }
-
-
+    return null;
+  }
 }
-
-
-
-

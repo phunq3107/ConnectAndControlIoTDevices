@@ -24,16 +24,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdafruitScheduling {
 
-    private final long interval = 5000L;
+  private final long interval = 5000L;
 
-    private final AdafruitService adafruitService;
-    private final HandleResponseService handleResponseService;
+  private final AdafruitService adafruitService;
+  private final HandleResponseService handleResponseService;
 
-
-    @Scheduled(fixedRate = interval)
-    void getFeedFromAdafruitServer() throws IOException {
-        List<FeedDto> feeds = adafruitService.getAllFeeds();
-        handleResponseService.handleGetFeedsResult(feeds);
-    }
-
+  @Scheduled(fixedRate = interval)
+  void getFeedFromAdafruitServer() throws IOException {
+    List<FeedDto> feeds = adafruitService.getAllFeeds();
+    handleResponseService.handleGetFeedsResult(feeds);
+  }
 }

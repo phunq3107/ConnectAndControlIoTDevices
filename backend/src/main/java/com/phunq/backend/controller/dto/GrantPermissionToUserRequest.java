@@ -8,5 +8,5 @@ import lombok.Data;
  */
 @Data
 public class GrantPermissionToUserRequest {
-    String username;
+  String username;
 }

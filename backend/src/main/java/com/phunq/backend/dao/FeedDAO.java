@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
  * @author phunq3107
  * @since 2/23/2022
  */
-
 public interface FeedDAO extends GenericDAO<Feed, String> {
 
-    Feed findByKey(String feedKey);
+  Feed findByKey(String feedKey);
 }

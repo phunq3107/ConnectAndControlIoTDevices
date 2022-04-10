@@ -26,115 +26,110 @@ import org.springframework.stereotype.Service;
 @Service
 public class FeedGroupService {
 
-    private final GroupDAO groupDAO;
-    private final UserService userService;
-    private final ThresholdService thresholdService;
-    private final LogService logService;
+  private final GroupDAO groupDAO;
+  private final UserService userService;
+  private final ThresholdService thresholdService;
+  private final LogService logService;
 
-    public FeedGroupService(GroupDAO groupDAO,
-                            @Lazy UserService userService,
-                            ThresholdService thresholdService,
-                            LogService logService) {
-        this.groupDAO = groupDAO;
-        this.userService = userService;
-        this.thresholdService = thresholdService;
-        this.logService = logService;
+  public FeedGroupService(
+      GroupDAO groupDAO,
+      @Lazy UserService userService,
+      ThresholdService thresholdService,
+      LogService logService) {
+    this.groupDAO = groupDAO;
+    this.userService = userService;
+    this.thresholdService = thresholdService;
+    this.logService = logService;
+  }
+
+  public FeedGroup save(FeedGroup feedGroup) {
+    return groupDAO.makePersistence(feedGroup);
+  }
+
+  public FeedGroup save(FeedGroupDto feedGroupDto) {
+    FeedGroup feedGroup = new FeedGroup();
+    feedGroup.setId(feedGroupDto.getId());
+    feedGroup.setName(feedGroupDto.getName());
+    feedGroup.setKey(feedGroupDto.getKey());
+    feedGroup.setDescription(feedGroupDto.getDescription());
+    feedGroup.setCreatedAt(feedGroupDto.getCreated_at());
+    return save(feedGroup);
+  }
+
+  public List<FeedGroup> findAll() {
+    return groupDAO.findAll();
+  }
+
+  public List<FeedGroup> findByUser(String username) {
+    return groupDAO.findByUser(username);
+  }
+
+  public FeedGroup findByKey(String key) throws CustomNotFoundException, CustomForbiddenException {
+    FeedGroup group = groupDAO.findByKey(key);
+    if (group == null) {
+      throw new CustomNotFoundException(String.format("Group [key=%s] not found", key));
     }
-
-    public FeedGroup save(FeedGroup feedGroup) {
-        return groupDAO.makePersistence(feedGroup);
+    if (isEmployee() && !getCurrentUser().equals(group.getUser())) {
+      throw new CustomForbiddenException(
+          getCurrentUsername(), String.format("group [key=%s]", group.getKey()));
     }
+    return group;
+  }
 
-
-    public FeedGroup save(FeedGroupDto feedGroupDto) {
-        FeedGroup feedGroup = new FeedGroup();
-        feedGroup.setId(feedGroupDto.getId());
-        feedGroup.setName(feedGroupDto.getName());
-        feedGroup.setKey(feedGroupDto.getKey());
-        feedGroup.setDescription(feedGroupDto.getDescription());
-        feedGroup.setCreatedAt(feedGroupDto.getCreated_at());
-        return save(feedGroup);
+  public FeedGroup findGroupById(String groupId)
+      throws CustomNotFoundException, CustomForbiddenException {
+    FeedGroup group = groupDAO.findById(groupId);
+    if (group == null) {
+      throw new CustomNotFoundException(String.format("Group [id=%s] not found", groupId));
     }
+    return group;
+  }
 
-    public List<FeedGroup> findAll() {
-        return groupDAO.findAll();
-    }
-
-    public List<FeedGroup> findByUser(String username) {
-        return groupDAO.findByUser(username);
-    }
-
-    public FeedGroup findByKey(String key) throws CustomNotFoundException, CustomForbiddenException {
-        FeedGroup group = groupDAO.findByKey(key);
-        if (group == null) {
-            throw new CustomNotFoundException(String.format("Group [key=%s] not found", key));
+  public void controlGroupAutomation(String key, Boolean value)
+      throws CustomNotFoundException, CustomForbiddenException {
+    if (key.equals("%")) {
+      List<FeedGroup> groups = groupDAO.findAll();
+      for (FeedGroup group : groups) {
+        if (isAdmin() || getCurrentUser().equals(group.getUser())) {
+          if (isEmployee()) {
+            logService.createControlAutomationLog(
+                group.getKey(), group.getEnableAutomation(), value);
+          }
+          group.setEnableAutomation(value);
+          save(group);
         }
-        if (isEmployee() && !getCurrentUser().equals(group.getUser())) {
-            throw new CustomForbiddenException(
-                    getCurrentUsername(), String.format("group [key=%s]", group.getKey())
-            );
-        }
-        return group;
+      }
+    } else {
+      FeedGroup group = findByKey(key);
+      if (isEmployee()) {
+        logService.createControlAutomationLog(key, group.getEnableAutomation(), value);
+      }
+      group.setEnableAutomation(value);
+      save(group);
     }
+  }
 
+  public void grantPermissionForUserToGroup(String groupKey, String username)
+      throws CustomNotFoundException, CustomForbiddenException {
+    FeedGroup group = findByKey(groupKey);
+    User user = username.equals("none") ? null : userService.findByUsername(username);
+    group.setUser(user);
+    save(group);
+  }
 
-    public FeedGroup findGroupById(String groupId)
-            throws CustomNotFoundException, CustomForbiddenException {
-        FeedGroup group = groupDAO.findById(groupId);
-        if (group == null) {
-            throw new CustomNotFoundException(String.format("Group [id=%s] not found", groupId));
-        }
-        return group;
+  public void getPermissionBackFromUser(User user) {
+    groupDAO.removeUserInGroup(user);
+  }
+
+  public void createNewIncubationSession(String key, CreateIncubationSession info) {
+    FeedGroup group = groupDAO.findByKey(key);
+    if (group == null) {
+      throw new CustomNotFoundException(String.format("Group [key=%s] not found", key));
     }
-
-
-    public void controlGroupAutomation(String key, Boolean value)
-            throws CustomNotFoundException, CustomForbiddenException {
-        if (key.equals("%")) {
-            List<FeedGroup> groups = groupDAO.findAll();
-            for (FeedGroup group : groups) {
-                if (isAdmin() || getCurrentUser().equals(group.getUser())) {
-                    if (isEmployee()) {
-                        logService.createControlAutomationLog(group.getKey(), group.getEnableAutomation(), value);
-                    }
-                    group.setEnableAutomation(value);
-                    save(group);
-                }
-            }
-        } else {
-            FeedGroup group = findByKey(key);
-            if (isEmployee()) {
-                logService.createControlAutomationLog(key, group.getEnableAutomation(), value);
-            }
-            group.setEnableAutomation(value);
-            save(group);
-
-        }
-    }
-
-    public void grantPermissionForUserToGroup(String groupKey, String username)
-            throws CustomNotFoundException, CustomForbiddenException {
-        FeedGroup group = findByKey(groupKey);
-        User user = username.equals("none") ? null : userService.findByUsername(username);
-        group.setUser(user);
-        save(group);
-    }
-
-    public void getPermissionBackFromUser(User user) {
-        groupDAO.removeUserInGroup(user);
-    }
-
-    public void createNewIncubationSession(String key, CreateIncubationSession info) {
-        FeedGroup group = groupDAO.findByKey(key);
-        if (group == null) {
-            throw new CustomNotFoundException(String.format("Group [key=%s] not found", key));
-        }
-        group.setNoEgg(info.getNoEgg());
-        group.setStartTime(LocalDateTime.now());
-        group.setThreshold(thresholdService.findById(info.getThresholdId()));
-        groupDAO.makePersistence(group);
-        logService.createNewIncubationLog(key);
-    }
-
-
+    group.setNoEgg(info.getNoEgg());
+    group.setStartTime(LocalDateTime.now());
+    group.setThreshold(thresholdService.findById(info.getThresholdId()));
+    groupDAO.makePersistence(group);
+    logService.createNewIncubationLog(key);
+  }
 }

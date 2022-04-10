@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface GroupDAO extends GenericDAO<FeedGroup, String> {
 
-    public FeedGroup findByKey(String key);
+  public FeedGroup findByKey(String key);
 
-    public List<FeedGroup> findByUser(String username);
+  public List<FeedGroup> findByUser(String username);
 
-    void removeUserInGroup(User user);
+  void removeUserInGroup(User user);
 }

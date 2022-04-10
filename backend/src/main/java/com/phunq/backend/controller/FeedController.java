@@ -39,56 +39,55 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class FeedController {
 
-    private final FeedService feedService;
-    private final FeedValueService feedValueService;
-    private final MapperService mapperService;
+  private final FeedService feedService;
+  private final FeedValueService feedValueService;
+  private final MapperService mapperService;
 
+  @GetMapping("/{feedKey}")
+  @PreAuthorize("hasAnyRole('EMPLOYEE')")
+  public FeedResponse getFeedByKey(@PathVariable String feedKey)
+      throws CustomNotFoundException, CustomForbiddenException {
+    log.info("__________Get feed by key: " + feedKey);
+    return mapperService.toFeedResponse(feedService.findByKey(feedKey));
+  }
 
-
-    @GetMapping("/{feedKey}")
-    @PreAuthorize("hasAnyRole('EMPLOYEE')")
-    public FeedResponse getFeedByKey(@PathVariable String feedKey)
-            throws CustomNotFoundException, CustomForbiddenException {
-        log.info("__________Get feed by key: " + feedKey);
-        return mapperService.toFeedResponse(feedService.findByKey(feedKey));
+  @GetMapping("/{feedKey}/data")
+  @PreAuthorize("hasAnyRole('EMPLOYEE')")
+  public List<FeedDataResponse> getFeedData(
+      @PathVariable String feedKey,
+      @ApiParam(example = "2021-12-31T12:30:30")
+          @RequestParam(name = "start_time", required = false)
+          String startTimeParam,
+      @ApiParam(example = "2021-12-31T12:30:30") @RequestParam(name = "end_time", required = false)
+          String endTimeParam)
+      throws CustomBadRequestException, CustomNotFoundException, CustomForbiddenException {
+    log.info("__________Get feed data: " + feedKey + " | " + startTimeParam + " | " + endTimeParam);
+    LocalDateTime startTime;
+    LocalDateTime endTime;
+    try {
+      if (startTimeParam == null) {
+        startTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
+      } else {
+        startTime = mapperService.toLocalDateTime(startTimeParam);
+      }
+      if (endTimeParam == null) {
+        endTime = LocalDateTime.now();
+      } else {
+        endTime = mapperService.toLocalDateTime(endTimeParam);
+      }
+    } catch (Exception e) {
+      throw new CustomBadRequestException("Bad request");
     }
+    return feedValueService.findAllByStartAndEndTime(feedKey, startTime, endTime).stream()
+        .map(mapperService::toFeedDateResponse)
+        .collect(Collectors.toList());
+  }
 
-    @GetMapping("/{feedKey}/data")
-    @PreAuthorize("hasAnyRole('EMPLOYEE')")
-    public List<FeedDataResponse> getFeedData(@PathVariable String feedKey,
-                                              @ApiParam(example = "2021-12-31T12:30:30")
-                                              @RequestParam(name = "start_time", required = false) String startTimeParam,
-                                              @ApiParam(example = "2021-12-31T12:30:30")
-                                              @RequestParam(name = "end_time", required = false) String endTimeParam)
-            throws CustomBadRequestException, CustomNotFoundException, CustomForbiddenException {
-        log.info("__________Get feed data: " + feedKey + " | " + startTimeParam + " | " + endTimeParam);
-        LocalDateTime startTime;
-        LocalDateTime endTime;
-        try {
-            if (startTimeParam == null) {
-                startTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
-            } else {
-                startTime = mapperService.toLocalDateTime(startTimeParam);
-            }
-            if (endTimeParam == null) {
-                endTime = LocalDateTime.now();
-            } else {
-                endTime = mapperService.toLocalDateTime(endTimeParam);
-            }
-        } catch (Exception e) {
-            throw new CustomBadRequestException("Bad request");
-        }
-        return feedValueService.findAllByStartAndEndTime(feedKey, startTime, endTime)
-                .stream().map(mapperService::toFeedDateResponse)
-                .collect(Collectors.toList());
-    }
-
-    @PostMapping("/{feedKey}/data")
-    @PreAuthorize("hasAnyRole('EMPLOYEE')")
-    public void addFeedData(@PathVariable String feedKey, @RequestBody AddFeedDataRequest body)
-            throws IOException {
-        log.info("__________Add feed data: " + feedKey + " | " + body);
-        feedValueService.addFeedValue(feedKey, body.getValue());
-    }
-
+  @PostMapping("/{feedKey}/data")
+  @PreAuthorize("hasAnyRole('EMPLOYEE')")
+  public void addFeedData(@PathVariable String feedKey, @RequestBody AddFeedDataRequest body)
+      throws IOException {
+    log.info("__________Add feed data: " + feedKey + " | " + body);
+    feedValueService.addFeedValue(feedKey, body.getValue());
+  }
 }

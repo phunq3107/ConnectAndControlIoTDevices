@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface LogDAO extends GenericDAO<Log, Long> {
 
-    List<Log> findByUsername(String username);
+  List<Log> findByUsername(String username);
 }

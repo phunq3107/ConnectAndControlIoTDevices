@@ -15,20 +15,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAOImpl extends GenericDAOImpl<User, Long> implements UserDAO {
 
-    public UserDAOImpl() {
-        super(User.class);
-    }
+  public UserDAOImpl() {
+    super(User.class);
+  }
 
-    @Override
-    public User findByUsername(String username) {
-        try {
-            TypedQuery<User> query = em.createQuery(
-                    "select u from  User  u  where  u.username=:username", User.class
-            );
-            query.setParameter("username", username);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+  @Override
+  public User findByUsername(String username) {
+    try {
+      TypedQuery<User> query =
+          em.createQuery("select u from  User  u  where  u.username=:username", User.class);
+      query.setParameter("username", username);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
     }
+  }
 }

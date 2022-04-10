@@ -11,35 +11,35 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class MyApplicationContext {
 
-    public static User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+  public static User getCurrentUser() {
+    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
 
-    public static void setCurrentUser(Authentication authentication) {
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+  public static void setCurrentUser(Authentication authentication) {
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
 
-    public static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
+  public static Authentication getAuthentication() {
+    return SecurityContextHolder.getContext().getAuthentication();
+  }
 
-    public static Long getCurrentUserId() {
-        return getCurrentUser().getId();
-    }
+  public static Long getCurrentUserId() {
+    return getCurrentUser().getId();
+  }
 
-    public static UserRole getCurrentUserRole() {
-        return getCurrentUser().getRole();
-    }
+  public static UserRole getCurrentUserRole() {
+    return getCurrentUser().getRole();
+  }
 
-    public static Boolean isAdmin() {
-        return getCurrentUserRole().equals(UserRole.ADMIN);
-    }
+  public static Boolean isAdmin() {
+    return getCurrentUserRole().equals(UserRole.ADMIN);
+  }
 
-    public static Boolean isEmployee() {
-        return getCurrentUserRole().equals(UserRole.EMPLOYEE);
-    }
+  public static Boolean isEmployee() {
+    return getCurrentUserRole().equals(UserRole.EMPLOYEE);
+  }
 
-    public static String getCurrentUsername() {
-        return getCurrentUser().getUsername();
-    }
+  public static String getCurrentUsername() {
+    return getCurrentUser().getUsername();
+  }
 }

@@ -15,13 +15,14 @@ import lombok.Data;
 @Entity
 @Data
 public class FeedValue {
-    @Id
-    private String id;
-    private String value;
-    @ManyToOne
-    @JoinColumn(name = "FEED_ID")
-    private Feed feed;
-    private LocalDateTime createdAt;
-    private String createdEpoch;
-    private LocalDateTime expiration;
+  @Id private String id;
+  private String value;
+
+  @ManyToOne
+  @JoinColumn(name = "FEED_ID")
+  private Feed feed;
+
+  private LocalDateTime createdAt;
+  private String createdEpoch;
+  private LocalDateTime expiration;
 }

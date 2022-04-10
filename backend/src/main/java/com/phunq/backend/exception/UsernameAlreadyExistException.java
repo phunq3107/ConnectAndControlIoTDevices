@@ -6,14 +6,14 @@ package com.phunq.backend.exception;
  */
 public class UsernameAlreadyExistException extends RuntimeException {
 
-    private String username;
+  private String username;
 
-    public UsernameAlreadyExistException(String username) {
-        this.username = username;
-    }
+  public UsernameAlreadyExistException(String username) {
+    this.username = username;
+  }
 
-    @Override
-    public String getMessage() {
-        return String.format("Username [%s] already exists", username);
-    }
+  @Override
+  public String getMessage() {
+    return String.format("Username [%s] already exists", username);
+  }
 }

@@ -16,13 +16,12 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AutomationTaskScheduling {
 
-    private final long interval = 5000L;
+  private final long interval = 5000L;
 
-    private final AutomationService automationService;
+  private final AutomationService automationService;
 
-    @Scheduled(fixedRate = interval)
-    public void doAutomationTask() throws IOException {
-        automationService.doAutomationTask();
-
-    }
+  @Scheduled(fixedRate = interval)
+  public void doAutomationTask() throws IOException {
+    automationService.doAutomationTask();
+  }
 }

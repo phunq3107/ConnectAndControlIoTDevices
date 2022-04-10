@@ -19,40 +19,40 @@ import lombok.Data;
 @Data
 public class Feed {
 
-    @Id
-    private String id;
-    private String name;
-    @Column(unique = true)
-    private String key;
-    @Enumerated(EnumType.STRING)
-    private FeedType type;
-    private String currentValue;
-    private LocalDateTime createAt;
-    private LocalDateTime lastTimeGetData;
+  @Id private String id;
+  private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "GROUP_ID")
-    private FeedGroup feedGroup;
+  @Column(unique = true)
+  private String key;
 
-    public boolean isLight() {
-        return this.type == FeedType.Light;
-    }
+  @Enumerated(EnumType.STRING)
+  private FeedType type;
 
-    public boolean isScreen() {
-        return this.type == FeedType.Screen;
-    }
+  private String currentValue;
+  private LocalDateTime createAt;
+  private LocalDateTime lastTimeGetData;
 
-    public boolean isTemperatureSensor() {
-        return this.type == FeedType.TemperatureSensor;
-    }
+  @ManyToOne
+  @JoinColumn(name = "GROUP_ID")
+  private FeedGroup feedGroup;
 
-    public boolean isSoundSensor() {
-        return this.type == FeedType.SoundSensor;
-    }
+  public boolean isLight() {
+    return this.type == FeedType.Light;
+  }
 
-    public Integer getCurrentValueAsInt() {
-        return Integer.parseInt(this.currentValue);
-    }
+  public boolean isScreen() {
+    return this.type == FeedType.Screen;
+  }
 
+  public boolean isTemperatureSensor() {
+    return this.type == FeedType.TemperatureSensor;
+  }
 
+  public boolean isSoundSensor() {
+    return this.type == FeedType.SoundSensor;
+  }
+
+  public Integer getCurrentValueAsInt() {
+    return Integer.parseInt(this.currentValue);
+  }
 }

@@ -8,5 +8,5 @@ import lombok.Data;
  */
 @Data
 public class AddFeedDataRequest {
-    private String value;
+  private String value;
 }

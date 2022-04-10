@@ -5,9 +5,9 @@ import com.phunq.backend.entity.TemperatureThreshold;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ThresholdDAOImpl extends GenericDAOImpl<TemperatureThreshold, Integer> implements ThresholdDAO {
-    public ThresholdDAOImpl() {
-        super(TemperatureThreshold.class);
-    }
+public class ThresholdDAOImpl extends GenericDAOImpl<TemperatureThreshold, Integer>
+    implements ThresholdDAO {
+  public ThresholdDAOImpl() {
+    super(TemperatureThreshold.class);
+  }
 }
-

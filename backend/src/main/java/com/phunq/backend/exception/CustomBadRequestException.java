@@ -5,14 +5,14 @@ package com.phunq.backend.exception;
  * @since 2/25/2022
  */
 public class CustomBadRequestException extends RuntimeException {
-    private final String message;
+  private final String message;
 
-    public CustomBadRequestException(String message) {
-        this.message = message;
-    }
+  public CustomBadRequestException(String message) {
+    this.message = message;
+  }
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
+  @Override
+  public String getMessage() {
+    return message;
+  }
 }

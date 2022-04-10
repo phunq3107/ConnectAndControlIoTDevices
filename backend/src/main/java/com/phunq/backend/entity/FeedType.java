@@ -5,15 +5,18 @@ package com.phunq.backend.entity;
  * @since 3/4/2022
  */
 public enum FeedType {
-    Light("LI"), Screen("SC"), TemperatureSensor("TE"), SoundSensor("SO");
+  Light("LI"),
+  Screen("SC"),
+  TemperatureSensor("TE"),
+  SoundSensor("SO");
 
-    private final String code;
+  private final String code;
 
-    FeedType(String code) {
-        this.code = code;
-    }
+  FeedType(String code) {
+    this.code = code;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 }

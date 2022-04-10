@@ -15,17 +15,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ObjectMapperConfig {
 
-    @Bean
-    public JavaTimeModule dataTimeModule() {
-        return new JavaTimeModule();
-    }
+  @Bean
+  public JavaTimeModule dataTimeModule() {
+    return new JavaTimeModule();
+  }
 
-    @Bean
-    public ObjectMapper getObjectMapper(JavaTimeModule javaTimeModule) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
-        mapper.registerModule(javaTimeModule);
-        return mapper;
-    }
-
+  @Bean
+  public ObjectMapper getObjectMapper(JavaTimeModule javaTimeModule) {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
+    mapper.registerModule(javaTimeModule);
+    return mapper;
+  }
 }

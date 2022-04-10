@@ -24,44 +24,46 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @AllArgsConstructor
 public class HandleException {
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    @ExceptionHandler({CustomNotFoundException.class})
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public void handleNotFoundException(HttpServletResponse response, Exception e)
-            throws IOException {
-        printMessage(response, e);
-    }
+  @ExceptionHandler({CustomNotFoundException.class})
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  public void handleNotFoundException(HttpServletResponse response, Exception e)
+      throws IOException {
+    printMessage(response, e);
+  }
 
-    @ExceptionHandler({CustomBadRequestException.class})
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public void handleBadRequestException(HttpServletResponse response, Exception e)
-            throws IOException {
-        printMessage(response, e);
-    }
+  @ExceptionHandler({CustomBadRequestException.class})
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public void handleBadRequestException(HttpServletResponse response, Exception e)
+      throws IOException {
+    printMessage(response, e);
+  }
 
-    @ExceptionHandler({UsernameAlreadyExistException.class})
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    public void handleUsernameAlreadyExistException(HttpServletResponse response, Exception e)
-            throws IOException {
-        printMessage(response, e);
-    }
+  @ExceptionHandler({UsernameAlreadyExistException.class})
+  @ResponseStatus(value = HttpStatus.CONFLICT)
+  public void handleUsernameAlreadyExistException(HttpServletResponse response, Exception e)
+      throws IOException {
+    printMessage(response, e);
+  }
 
-    @ExceptionHandler({CustomForbiddenException.class})
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public void handleCustomForbiddenException(HttpServletResponse response, Exception e)
-            throws IOException {
-        printMessage(response, e);
-    }
+  @ExceptionHandler({CustomForbiddenException.class})
+  @ResponseStatus(value = HttpStatus.FORBIDDEN)
+  public void handleCustomForbiddenException(HttpServletResponse response, Exception e)
+      throws IOException {
+    printMessage(response, e);
+  }
 
-    private void printMessage(HttpServletResponse response, Exception e) throws IOException {
-        response.setContentType("application/json");
-        response.getOutputStream().println(
-                mapper.writeValueAsString(
-                        new TreeMap<>() {{
-                            put("message", e.getMessage());
-                        }}
-                )
-        );
-    }
+  private void printMessage(HttpServletResponse response, Exception e) throws IOException {
+    response.setContentType("application/json");
+    response
+        .getOutputStream()
+        .println(
+            mapper.writeValueAsString(
+                new TreeMap<>() {
+                  {
+                    put("message", e.getMessage());
+                  }
+                }));
+  }
 }

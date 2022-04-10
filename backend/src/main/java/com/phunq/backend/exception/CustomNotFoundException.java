@@ -5,14 +5,14 @@ package com.phunq.backend.exception;
  * @since 2/25/2022
  */
 public class CustomNotFoundException extends RuntimeException {
-    private final String message;
+  private final String message;
 
-    public CustomNotFoundException(String message) {
-        this.message = message;
-    }
+  public CustomNotFoundException(String message) {
+    this.message = message;
+  }
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
+  @Override
+  public String getMessage() {
+    return message;
+  }
 }

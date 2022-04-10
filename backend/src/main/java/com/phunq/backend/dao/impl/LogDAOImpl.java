@@ -9,17 +9,15 @@ import java.util.List;
 
 @Repository
 public class LogDAOImpl extends GenericDAOImpl<Log, Long> implements LogDAO {
-    public LogDAOImpl() {
-        super(Log.class);
-    }
+  public LogDAOImpl() {
+    super(Log.class);
+  }
 
-    @Override
-    public List<Log> findByUsername(String username) {
-        TypedQuery<Log> query = em.createQuery(
-                "select l from Log l where l.username=:username",
-                Log.class
-        );
-        query.setParameter("username", username);
-        return query.getResultList();
-    }
+  @Override
+  public List<Log> findByUsername(String username) {
+    TypedQuery<Log> query =
+        em.createQuery("select l from Log l where l.username=:username", Log.class);
+    query.setParameter("username", username);
+    return query.getResultList();
+  }
 }

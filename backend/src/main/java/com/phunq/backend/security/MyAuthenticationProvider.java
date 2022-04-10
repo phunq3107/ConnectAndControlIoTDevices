@@ -19,28 +19,25 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserDetailsService userService;
-    private final PasswordEncoder passwordEncoder;
+  private final UserDetailsService userService;
+  private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-        String username = (String) token.getPrincipal();
-        String password = (String) token.getCredentials();
-        User user = (User) userService.loadUserByUsername(username);
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException(
-                    String.format("Wrong password for username [%s]", username));
-        }
-        return new UsernamePasswordAuthenticationToken(
-                user,
-                null,
-                user.getAuthorities()
-        );
+  @Override
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    UsernamePasswordAuthenticationToken token =
+        (UsernamePasswordAuthenticationToken) authentication;
+    String username = (String) token.getPrincipal();
+    String password = (String) token.getCredentials();
+    User user = (User) userService.loadUserByUsername(username);
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+      throw new BadCredentialsException(
+          String.format("Wrong password for username [%s]", username));
     }
+    return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+  }
 
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
+  @Override
+  public boolean supports(Class<?> authentication) {
+    return authentication.equals(UsernamePasswordAuthenticationToken.class);
+  }
 }

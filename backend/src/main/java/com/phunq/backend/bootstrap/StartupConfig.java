@@ -15,27 +15,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class StartupConfig implements CommandLineRunner {
 
-    @Value("${admin.username}")
-    private String username;
-    @Value("${admin.password}")
-    private String password;
+  @Value("${admin.username}")
+  private String username;
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+  @Value("${admin.password}")
+  private String password;
 
-    public StartupConfig(UserService userService,
-                         PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
+  private final UserService userService;
+  private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void run(String... args) throws Exception {
-        User admin = new User();
-        admin.setUsername(username);
-        admin.setPassword(passwordEncoder.encode(password));
-        admin.setRole(UserRole.ADMIN);
-        userService.save(admin);
+  public StartupConfig(UserService userService, PasswordEncoder passwordEncoder) {
+    this.userService = userService;
+    this.passwordEncoder = passwordEncoder;
+  }
 
-    }
+  @Override
+  public void run(String... args) throws Exception {
+    User admin = new User();
+    admin.setUsername(username);
+    admin.setPassword(passwordEncoder.encode(password));
+    admin.setRole(UserRole.ADMIN);
+    userService.save(admin);
+  }
 }

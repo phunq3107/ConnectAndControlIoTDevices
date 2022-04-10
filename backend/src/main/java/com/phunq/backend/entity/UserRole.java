@@ -5,5 +5,6 @@ package com.phunq.backend.entity;
  * @since 3/7/2022
  */
 public enum UserRole {
-    ADMIN, EMPLOYEE
+  ADMIN,
+  EMPLOYEE
 }

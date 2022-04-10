@@ -11,22 +11,22 @@ import lombok.Data;
 @Data
 public class FeedDto {
 
-    private String id;
-    private String name;
-    private String description;
-    private String last_value;
-    private LocalDateTime last_value_at;
-    private String license;
-    private LocalDateTime created_at;
-    private String key;
-    private FeedGroupDto group;
+  private String id;
+  private String name;
+  private String description;
+  private String last_value;
+  private LocalDateTime last_value_at;
+  private String license;
+  private LocalDateTime created_at;
+  private String key;
+  private FeedGroupDto group;
 
-//  @Override
-//  public String toString() {
-//    return "FeedDto{" +
-//        "id='" + id + '\'' +
-//        ", name='" + name + '\'' +
-//        ", key='" + key + '\'' +
-//        '}';
-//  }
+  //  @Override
+  //  public String toString() {
+  //    return "FeedDto{" +
+  //        "id='" + id + '\'' +
+  //        ", name='" + name + '\'' +
+  //        ", key='" + key + '\'' +
+  //        '}';
+  //  }
 }

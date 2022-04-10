@@ -11,7 +11,6 @@ import lombok.Data;
 @Data
 public class FeedDataResponse {
 
-    private String value;
-    private LocalDateTime createdAt;
-
+  private String value;
+  private LocalDateTime createdAt;
 }

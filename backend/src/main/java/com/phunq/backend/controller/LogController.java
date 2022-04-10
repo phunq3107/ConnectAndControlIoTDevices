@@ -20,17 +20,17 @@ import java.util.List;
 @Slf4j
 public class LogController {
 
-    private final LogService logService;
+  private final LogService logService;
 
-    @GetMapping("/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
-    public List<Log> getLogByUsername(@PathVariable String username) {
-        log.info("__________Get log: "+username);
-        if (MyApplicationContext.isEmployee() && !MyApplicationContext.getCurrentUsername().equals(username)) {
-            throw new CustomForbiddenException(
-                    MyApplicationContext.getCurrentUsername(), String.format("log [username=%s]", username)
-            );
-        }
-        return logService.findByUsername(username);
+  @GetMapping("/{username}")
+  @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+  public List<Log> getLogByUsername(@PathVariable String username) {
+    log.info("__________Get log: " + username);
+    if (MyApplicationContext.isEmployee()
+        && !MyApplicationContext.getCurrentUsername().equals(username)) {
+      throw new CustomForbiddenException(
+          MyApplicationContext.getCurrentUsername(), String.format("log [username=%s]", username));
     }
+    return logService.findByUsername(username);
+  }
 }

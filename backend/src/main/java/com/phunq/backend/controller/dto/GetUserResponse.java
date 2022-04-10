@@ -15,10 +15,9 @@ import lombok.Data;
 @Builder
 public class GetUserResponse {
 
-    private String username;
-    private String fullname;
-    private LocalDate dob;
-    private Boolean enable = true;
-    private List<String> groups = new ArrayList<>();
-
+  private String username;
+  private String fullname;
+  private LocalDate dob;
+  private Boolean enable = true;
+  private List<String> groups = new ArrayList<>();
 }

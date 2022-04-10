@@ -1,0 +1,29 @@
+.logTable {
+    text-align: center;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.logTable td,
+.logTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.logTable tr:hover {
+    background-color: #ddd;
+}
+
+.logTable tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.logTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #2693e6;
+    color: white;
+}

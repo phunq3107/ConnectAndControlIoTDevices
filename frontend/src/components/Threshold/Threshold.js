@@ -1,46 +1,100 @@
 import styles from './threshold.module.css'
-import { useState, useContext } from 'react'
-import LoginInput from './../LoginForm/LoginInput'
-import { AuthContext } from '../../services/authorization/AuthContext'
-import { setThreshold } from '../../services/groupsAPI'
-function Threshold({ incubatorKey }) {
-    const [upper, setUpper] = useState()
-    const [lower, setLower] = useState()
-    const auth = useContext(AuthContext)
-    const handleThreshold = () => {
-        if (lower && upper && lower <= upper) {
-            const user = auth.getCurrentUser()
-            if (user && user.access_token) {
-                setThreshold(user, incubatorKey, upper, lower).then(res => {
-                    setUpper()
-                    setLower()
-                })
-            }
-            else auth.logout()
-        }
+import { useState } from 'react'
+function Threshold({ thresholds, createNewSession }) {
+    const [selectedThreshold, setSelectedThreshold] = useState(thresholds[0])
+    const [numEggs, setNumEggs] = useState('')
+    const handleChangeSelection = (e) => {
+        setSelectedThreshold(thresholds.find(threshold => threshold.name === e.target.value))
     }
-    return (
-        <div className={styles.container}>
-            <div>
-                <LoginInput
-                    label="Ngưỡng trên"
-                    placeholder=""
-                    type="number"
-                    value={upper || ''}
-                    onChange={(e) => setUpper(e.target.value)}
-                />
-                <LoginInput
-                    label="Ngưỡng dưới"
-                    placeholder=""
-                    type="number"
-                    value={lower || ''}
-                    onChange={(e) => setLower(e.target.value)}
-                />
-                <div>
-                    <button className={styles.button} onClick={handleThreshold}>Xác nhận</button>
+    const renderTableHeader = (headers) => {
+        return (
+            <tr>
+                {
+                    headers.map((header, index) => {
+                        return <th key={index}>{header}</th>
+                    })
+                }
+            </tr>
+        )
+
+    }
+    const renderTableData = (data) => {
+        return data.map((datum, index) => {
+            return (
+                <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{datum.days}</td>
+                    <td>{datum.upper}<sup>o</sup>C</td>
+                    <td>{datum.lower}<sup>o</sup>C</td>
+                </tr>
+            )
+        })
+    }
+    const handleNewSession = (sessionId, numEggs) => {
+        const id = thresholds.find(threshold => threshold.id === sessionId).id
+        const noEgg = parseInt(numEggs)
+        if (id && parseInt(numEggs) > 0) {
+            createNewSession(id, noEgg)
+            setNumEggs('')
+        }
+        else alert('Số trứng không hợp lệ')
+    }
+    if (thresholds) {
+        const tableData = [
+            {
+                days: selectedThreshold.numberDayOfStage1,
+                upper: selectedThreshold.upperStage1,
+                lower: selectedThreshold.lowerStage1
+            },
+            {
+                days: selectedThreshold.numberDayOfStage2,
+                upper: selectedThreshold.upperStage2,
+                lower: selectedThreshold.lowerStage2
+            },
+            {
+                days: "Đến khi trứng nở",
+                upper: selectedThreshold.upperStage3,
+                lower: selectedThreshold.lowerStage3
+            }
+        ]
+        return (
+            <div className={styles.container}>
+                <h2 className={styles.title}>Thiết lập chu kì ấp trứng mới</h2>
+                <div className={styles.content}>
+                    <div className= {styles.inputContainer}>
+                        <label htmlFor="numEggs">Số trứng</label>
+                        <input type="number" id="numEggs" value={numEggs} onChange={(e) => { setNumEggs(e.target.value) }} />
+                    </div>
+                    <div className={styles.selector}>
+                        <label htmlFor="threshold">Loại trứng</label>
+                        <div className={styles.selectBox}>
+                            <select id="threshold" onChange={handleChangeSelection} value={selectedThreshold.name}>
+                                {
+                                    thresholds.map((threshold) =>
+                                        <option
+                                            key={threshold.id}
+                                            value={threshold.name}
+                                        >
+                                            {threshold.name}
+                                        </option>
+                                    )
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <table className={styles.stages}>
+                    <tbody>
+                        {renderTableHeader(['GIAI ĐOẠN', 'SỐ NGÀY', 'NGƯỠNG NHIỆT TRÊN', 'NGƯỠNG NHIỆT DƯỚI'])}
+                        {renderTableData(tableData)}
+                    </tbody>
+                </table>
+                <div className={styles.buttonContainer}>
+                    <button onClick={() => handleNewSession(selectedThreshold.id, numEggs)}>Xác nhận</button>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
+    else return null
 }
 export default Threshold

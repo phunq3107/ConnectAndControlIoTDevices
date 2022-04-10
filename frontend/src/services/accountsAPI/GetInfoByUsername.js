@@ -1,5 +1,5 @@
-import { feedsAPI } from './feedsAPI'
-const getFeedData = (user, feed, time) => {
+import { accountsAPI } from './accountsAPI'
+const GetInfoByUsername = (user) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${user.access_token}`);
 
@@ -9,10 +9,9 @@ const getFeedData = (user, feed, time) => {
         redirect: 'follow'
     };
 
-    return fetch(`${feedsAPI}/${feed.key}/data?start_time=${time}`, requestOptions)
+    return fetch(`${accountsAPI}/${user.username}`, requestOptions)
         .then(response => response.text())
         .then(result => JSON.parse(result))
         .catch(error => console.log('error', error));
 }
-export default getFeedData
-
+export default GetInfoByUsername

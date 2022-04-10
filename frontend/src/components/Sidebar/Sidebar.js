@@ -8,11 +8,11 @@ function Sidebar() {
         },
         {
             title: "Nhật ký hoạt động",
-            link: "/"
+            link: "/employee/log"
         },
         {
             title: "Thông tin cá nhân",
-            link: "/"
+            link: "/employee/info"
         },
         {
             title: "Đăng xuất",

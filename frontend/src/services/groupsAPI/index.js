@@ -1,4 +1,6 @@
 export {default as getAllFeedsInGroup} from './GetAllFeedsInGroup'
 export {default as getGroupInfo} from './GetGroupInfo'
-export {default as setThreshold} from './SetThreshold'
+export {default as getThresholds} from './GetThresholds'
 export {default as setLightAutomation} from './SetLightAutomation'
+export {default as createNewSession} from './CreateNewSession'
+export {default as getAllGroups} from './GetAllGroups'

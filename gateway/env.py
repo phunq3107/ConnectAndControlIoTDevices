@@ -1,5 +1,5 @@
 AIO_USERNAME = "phunguyen3107"
-AIO_KEY = "aio_bMAZ86u08UZu1jCGF9TgUkiAQqk4"
+AIO_KEY = "aio_ochP04FOZiqucgJPgW8IRUxRm4Xg"
 AIO_FEED_KEYS = ["g01.g01-li", "g01.g01-so", "g01.g01-te", "g01.g01-sc"]
 
 SOUND_THRESHOLD = 200

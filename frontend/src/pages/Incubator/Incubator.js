@@ -1,14 +1,10 @@
-import MeasuredInfo from "../../components/MeasuredInfo/MeasuredInfo"
-import Sidebar from "../../components/Sidebar/Sidebar"
+
 import styles from "./incubator.module.css"
-import Navbar from "../../components/Navbar/Navbar"
-import Charts from "../../components/Chart/Charts"
-import Threshold from "../../components/Threshold/Threshold"
-import LightInfo from "../../components/LightInfo/LightInfo"
+import { Navbar, Charts, Sidebar, MeasuredInfo, Threshold, LightInfo } from '../../components'
 import { useLocation } from "react-router-dom"
 import { useContext, useEffect, useState, useRef } from 'react'
 import { AuthContext } from "../../services/authorization/AuthContext"
-import { getAllFeedsInGroup, getGroupInfo, setLightAutomation } from "../../services/groupsAPI"
+import { getAllFeedsInGroup, getGroupInfo, getThresholds, setLightAutomation, createNewSession } from "../../services/groupsAPI"
 import { getFeedData, setLightState } from "../../services/feedsAPI"
 import { formatLightData, handleNewData } from "../../services/datahandler"
 function Incubator() {
@@ -21,7 +17,7 @@ function Incubator() {
     const [tempData, setTempData] = useState([])
     const [soundData, setSoundData] = useState([])
     const [lightData, setLightData] = useState([])
-
+    const [thresholds, setThreshHolds] = useState()
     const light = useRef()
     const tempSensor = useRef()
     const soundSensor = useRef()
@@ -49,6 +45,9 @@ function Incubator() {
             getGroupInfo(user, incubatorKey).then(info => {
                 setIncubatorInfo(info)
             })
+            getThresholds(user).then(thresholds => {
+                setThreshHolds(thresholds)
+            })
         }
         else {
             auth.logout()
@@ -56,11 +55,11 @@ function Incubator() {
     }, [])
     useEffect(() => {
         const user = auth.getCurrentUser()
-        if (feeds) {
+        if (feeds && thresholds) {
             light.current = feeds.filter(feed => feed.type === "Light")[0]
             tempSensor.current = feeds.filter(feed => feed.type === "TemperatureSensor")[0]
             soundSensor.current = feeds.filter(feed => feed.type === "SoundSensor")[0]
-            const threeHoursAgo = new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString().slice(0, -5)
+            const threeHoursAgo = new Date(new Date().getTime() - 10800000).toISOString().slice(0, -5)
             if (user && user.access_token) {
                 getFeedData(user, tempSensor.current, threeHoursAgo).then(data => {
                     setTempData(data)
@@ -86,7 +85,7 @@ function Incubator() {
                 })
                 if (light.current && prevLightData.current) {
                     const now = prevLightData.current && prevLightData.current.length < 1 ?
-                        new Date(new Date().getTime() - 11000).toISOString().slice(0, -5) :
+                        new Date(new Date().getTime() - 10000).toISOString().slice(0, -5) :
                         prevLightData.current[prevLightData.current.length - 1].createdAt
                     getFeedData(user, light.current, now).then(data => {
                         handleNewData(prevLightData.current, data, true, setLightData)
@@ -127,8 +126,16 @@ function Incubator() {
         }
         else auth.logout()
     }
-    if (feeds && incubatorInfo) {
-        return ( feeds && incubatorInfo &&
+    const createSession = (id, noEgg) => {
+        const user = auth.getCurrentUser()
+        if (user && user.access_token) {
+            createNewSession(user, incubatorKey, id, noEgg)
+        }
+    }
+
+
+    if (feeds && incubatorInfo && thresholds) {
+        return (
             <>
                 <Navbar incubatorKey={incubatorKey} />
                 <div className={styles.container}>
@@ -140,18 +147,19 @@ function Incubator() {
                         <Charts
                             tempData={tempData}
                             soundData={soundData}
-                            threshold={{upper:incubatorInfo.upperThreshold, lower: incubatorInfo.lowerThreshold}}
+                            threshold={{ upper: incubatorInfo.upperThreshold, lower: incubatorInfo.lowerThreshold }}
                         />
                         <LightInfo
                             light={light.current}
                             incubatorInfo={incubatorInfo}
                             lightData={lightData}
                             incubatorKey={incubatorKey}
-                            handleLightState = {handleLightState}
-                            handleAutomation = {handleAutomation}
+                            handleLightState={handleLightState}
+                            handleAutomation={handleAutomation}
                         />
                         <Threshold
-                            incubatorKey={incubatorKey}
+                            thresholds={thresholds}
+                            createNewSession={createSession}
                         />
                     </div>
                 </div>

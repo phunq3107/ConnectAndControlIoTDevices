@@ -1,3 +1,4 @@
+import { groupsAPI } from './groupAPI'
 const GetGroupInfo = (user, groupKey) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${user.access_token}`);
@@ -8,7 +9,7 @@ const GetGroupInfo = (user, groupKey) => {
         redirect: 'follow'
     };
 
-    return fetch(`http://localhost:8080/api/v1/groups/${groupKey}`, requestOptions)
+    return fetch(`${groupsAPI}/${groupKey}`, requestOptions)
         .then(response => {
             if (response.status === 200)
                 return response.json()

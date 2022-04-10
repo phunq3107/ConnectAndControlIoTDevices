@@ -15,6 +15,7 @@ function Charts({ tempData, soundData, threshold }) {
                         XdataKey={chart.XdataKey}
                         YdataKey={chart.YdataKey}
                         threshold={chart.threshold ? chart.threshold : null}
+                        ticks = {chart.ticks}
                     />
                 )}
             </div>

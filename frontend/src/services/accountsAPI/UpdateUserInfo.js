@@ -1,26 +1,27 @@
-import { feedsAPI } from './feedsAPI'
-const SetLightState = (user, light, groupInfo) => {
+import { accountsAPI } from "./accountsAPI";
+
+const UpdateUserInfo = (user, newInfo) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${user.access_token}`)
     myHeaders.append("Content-Type", "application/json")
-    const value = groupInfo.lightState ? "0" : "1"
     var raw = JSON.stringify({
-        "value": value
+        ...newInfo
     })
+    
     var requestOptions = {
-        method: 'POST',
+        method: 'PATCH',
         headers: myHeaders,
         body: raw,
         redirect: 'follow'
     }
 
-    fetch(`${feedsAPI}/${light.key}/data`, requestOptions)
+    return fetch(`${accountsAPI}/${user.username}`, requestOptions)
         .then(response => {
             if (response.status === 200)
                 return response.text()
             throw new Error(response.status)
         })
-        .then(result => console.log("change light state"))
+        .then(result => console.log("change user info"))
         .catch(error => console.log('error', error))
 }
-export default SetLightState
+export default UpdateUserInfo

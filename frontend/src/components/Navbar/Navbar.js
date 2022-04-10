@@ -9,7 +9,7 @@ function Navbar({ incubatorKey }) {
             <div className={styles.navbar}>
                 <div className={styles.wrapper}>
                     <div>
-                        <span className={styles.title}>Hello {user.username},{incubatorKey}</span>
+                        <span className={styles.title}>Hello {user.username}{incubatorKey? ',' + incubatorKey : null}</span>
                     </div>
                 </div>
             </div>

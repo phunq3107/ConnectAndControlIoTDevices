@@ -1,5 +1,18 @@
 import styles from "./measuredInfo.module.css"
-function MeasuredInfo({incubatorInfo}) {
+import { BsFillSunFill } from "react-icons/bs"
+import { FaEgg, FaRegCalendarAlt } from "react-icons/fa"
+function MeasuredInfo({ incubatorInfo }) {
+    const getCurrentDay = (startTime) => {
+        return Math.floor((new Date().getTime() - new Date(startTime).getTime()) / 86400000) + " ngày"
+    }
+    const getCurrentStage = (startTime, threshold) => {
+        const currentDay = parseInt(getCurrentDay(startTime).split(' '))
+        if (currentDay < threshold.numberDayOfStage1)
+            return "Giai đoạn 1"
+        else if (currentDay < threshold.numberDayOfStage2)
+            return "Giai đoạn 2"
+        else return "Giai đoạn 3"
+    }
     if (incubatorInfo)
         return (
             <div className={styles.container}>
@@ -7,22 +20,37 @@ function MeasuredInfo({incubatorInfo}) {
                     <span className={styles.title}>Nhiệt độ hiện tại</span>
                     <div className={styles.infoContainer}>
                         <span className={styles.info}>{incubatorInfo.currentTemperature}<sup>o</sup>C</span>
+                        <BsFillSunFill className={styles.sunIcon} />
                     </div>
                     <span className={styles.subTitle}>Upper {incubatorInfo.upperThreshold}<sup>o</sup>C - Lower {incubatorInfo.lowerThreshold}<sup>o</sup>C</span>
                 </div>
                 <div className={styles.measuredItem}>
                     <span className={styles.title}>Số trứng</span>
                     <div className={styles.infoContainer}>
-                        <span className={styles.info}>20 trứng</span>
+                        <span className={styles.info}>{incubatorInfo.noEggs ? incubatorInfo.noEggs + " trứng" : "Không xác định"}</span>
+                        <FaEgg className={styles.eggIcon} />
                     </div>
                     <span className={styles.subTitle}>{incubatorInfo.hatchedEgg ? "Có trứng nở" : "Chưa có trứng nở"}</span>
                 </div>
                 <div className={styles.measuredItem}>
                     <span className={styles.title}>Số ngày hoạt động</span>
                     <div className={styles.infoContainer}>
-                        <span className={styles.info}>10 ngày</span>
+                        <span className={styles.info}>
+                            {
+                                incubatorInfo.startTime ?
+                                    getCurrentDay(incubatorInfo.startTime) :
+                                    "Không xác định"
+                            }
+                        <FaRegCalendarAlt className={styles.calendarIcon}/>
+                        </span>
                     </div>
-                    <span className={styles.subTitle}></span>
+                    <span className={styles.subTitle}>
+                        {
+                            incubatorInfo.startTime ?
+                                getCurrentStage(incubatorInfo.startTime, incubatorInfo.threshold) + " - " + incubatorInfo.threshold.name :
+                                null
+                        }
+                    </span>
                 </div>
             </div>
         )

@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    margin-top: 10px;
+}
+
+.content {
+    flex: 4;
+    padding: 20px;
+}
+
+.username {
+    display: flex;
+    align-items: center;
+}
+
+.userImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+
+.title {
+    text-align: center;
+    margin-top: 0;
+}

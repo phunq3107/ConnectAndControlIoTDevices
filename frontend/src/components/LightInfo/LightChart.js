@@ -11,7 +11,7 @@ function LightChart({ lightData }) {
                         <XAxis
                             dataKey="createdAt"
                             interval={0}
-                            stroke="#5550bd"
+                            stroke="#2693e6"
                             allowDataOverflow={false}
                             allowDuplicatedCategory={false}
                             tickFormatter={value => value ? value.substring(11) : 0}
@@ -20,11 +20,11 @@ function LightChart({ lightData }) {
                         <YAxis
                             dataKey="value"
                             ticks={[0, 1]}
-                            stroke="#5550bd"
+                            stroke="#2693e6"
                             tickFormatter={(value) => value === 1 ? 'ON' : 'OFF'}
                         />
                         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                        <Scatter data={lightData} fill="#5550bd" line shape={false} />
+                        <Scatter data={lightData} fill="#2693e6" line shape={false} />
                     </ScatterChart>
                 </ResponsiveContainer>
             </div>

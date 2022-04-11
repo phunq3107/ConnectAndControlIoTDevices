@@ -1,7 +1,15 @@
-.container{
+.container {
     display: flex;
     margin-top: 10px;
 }
-.content{
-    flex:4
+
+.content {
+    flex: 4
+}
+
+.incubatorsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 49% 49%;
+    margin-left:1%;
 }

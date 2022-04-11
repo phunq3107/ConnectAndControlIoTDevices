@@ -16,7 +16,6 @@ function EmployeeLog() {
         else auth.logout()
     }, []);
     if (log) {
-        console.log(log)
         return (
             <>
                 <Navbar />

@@ -18,6 +18,7 @@ function Incubator() {
     const [soundData, setSoundData] = useState([])
     const [lightData, setLightData] = useState([])
     const [thresholds, setThreshHolds] = useState()
+
     const light = useRef()
     const tempSensor = useRef()
     const soundSensor = useRef()
@@ -114,13 +115,16 @@ function Incubator() {
     }, [])
     const handleLightState = () => {
         const user = auth.getCurrentUser()
+
         if (user && user.access_token) {
+            
             setLightState(user, light.current, incubatorInfo)
         }
         else auth.logout()
     }
     const handleAutomation = () => {
         const user = auth.getCurrentUser()
+
         if (user && user.access_token) {
             setLightAutomation(user, incubatorKey, incubatorInfo)
         }
@@ -150,10 +154,8 @@ function Incubator() {
                             threshold={{ upper: incubatorInfo.upperThreshold, lower: incubatorInfo.lowerThreshold }}
                         />
                         <LightInfo
-                            light={light.current}
                             incubatorInfo={incubatorInfo}
                             lightData={lightData}
-                            incubatorKey={incubatorKey}
                             handleLightState={handleLightState}
                             handleAutomation={handleAutomation}
                         />

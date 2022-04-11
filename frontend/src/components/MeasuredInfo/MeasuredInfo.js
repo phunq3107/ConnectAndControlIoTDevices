@@ -1,18 +1,8 @@
 import styles from "./measuredInfo.module.css"
+import { getCurrentDay, getCurrentStage } from "../../services/datahandler"
 import { BsFillSunFill } from "react-icons/bs"
 import { FaEgg, FaRegCalendarAlt } from "react-icons/fa"
 function MeasuredInfo({ incubatorInfo }) {
-    const getCurrentDay = (startTime) => {
-        return Math.floor((new Date().getTime() - new Date(startTime).getTime()) / 86400000) + " ngày"
-    }
-    const getCurrentStage = (startTime, threshold) => {
-        const currentDay = parseInt(getCurrentDay(startTime).split(' '))
-        if (currentDay < threshold.numberDayOfStage1)
-            return "Giai đoạn 1"
-        else if (currentDay < threshold.numberDayOfStage2)
-            return "Giai đoạn 2"
-        else return "Giai đoạn 3"
-    }
     if (incubatorInfo)
         return (
             <div className={styles.container}>
@@ -41,7 +31,7 @@ function MeasuredInfo({ incubatorInfo }) {
                                     getCurrentDay(incubatorInfo.startTime) :
                                     "Không xác định"
                             }
-                        <FaRegCalendarAlt className={styles.calendarIcon}/>
+                            <FaRegCalendarAlt className={styles.calendarIcon} />
                         </span>
                     </div>
                     <span className={styles.subTitle}>

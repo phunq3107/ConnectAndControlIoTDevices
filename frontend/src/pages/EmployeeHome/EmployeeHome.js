@@ -1,10 +1,8 @@
 import { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../../services/authorization/AuthContext'
 import styles from './employeeHome.module.css'
-import { Link } from 'react-router-dom'
 import { getAllGroups } from '../../services/groupsAPI'
-import Navbar from '../../components/Navbar/Navbar'
-import Sidebar from '../../components/Sidebar/Sidebar'
+import { Navbar, Sidebar, IncubatorCell } from '../../components'
 function EmployeeHome() {
     const auth = useContext(AuthContext)
     const [incubators, setIncubators] = useState([])
@@ -22,17 +20,13 @@ function EmployeeHome() {
                 <div className={styles.container}>
                     <Sidebar />
                     <div className={styles.content}>
-                        {
-                            incubators.map(incubator =>
-                                <Link
-                                    key={incubator.key}
-                                    to="/incubator"
-                                    state={{ incubatorKey: incubator.key }}
-                                >
-                                    {incubator.name}
-                                </Link>
-                            )
-                        }
+                        <div className={styles.incubatorsContainer}>
+                            {
+                                incubators.map(incubator =>
+                                    <IncubatorCell key = {incubator.key} incubator={incubator} />
+                                )
+                            }                                                 
+                        </div>
                     </div>
                 </div>
             </>

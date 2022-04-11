@@ -1,0 +1,52 @@
+.container {
+    margin: 20px;
+    padding: 0px 20px;
+    -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    transition: .5s;
+    border-radius: 30px;
+}
+
+.container:hover {
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.title {
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 25px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-around;
+}
+
+.infoContainer {
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+}
+
+.info {
+    font-size: 17px;
+    font-weight: 400;
+}
+
+.subTitle {
+    font-size: 15px;
+    color: gray;
+}
+
+.viewButton {
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: #3bb077;
+    color: white;
+    cursor: pointer;
+    float:right;
+    margin-bottom: 10px;
+}

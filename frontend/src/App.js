@@ -14,6 +14,8 @@ import {
   ErrorPage,
   Login
 } from './pages';
+import AdminLog from './pages/AdminLog/AdminLog';
+import AdminInfo from './pages/AdminInfo/AdminInfo';
 
 function App() {
   const auth = useContext(AuthContext)
@@ -31,7 +33,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/admin/employees" element={<EmployeeManage />} />
-        <Route path="/admin/create-form" element={<EmployeeCreateForm />} />
+        <Route path="/admin/add" element={<EmployeeCreateForm />} />
+        <Route path="/admin/log" element={<AdminLog />} />
+        <Route path="/admin/info" element={<AdminInfo />} />
         <Route path="/employee" element={<EmployeeHome />} />
         <Route path="/employee/info" element={<EmployeeInfo />} />
         <Route path="employee/log" element={<EmployeeLog />} />

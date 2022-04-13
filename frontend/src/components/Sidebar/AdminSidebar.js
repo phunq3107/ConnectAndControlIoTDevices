@@ -11,12 +11,16 @@ export default function AdminSidebar() {
             link: "/admin/employees"
         },
         {
+            title: "Thêm nhân viên",
+            link: "/admin/add"
+        },
+        {
             title: "Nhật ký hoạt động",
-            link: "/"
+            link: "/admin/log"
         },
         {
             title: "Thông tin cá nhân",
-            link: "/"
+            link: "/admin/info"
         },
         {
             title: "Đăng xuất",

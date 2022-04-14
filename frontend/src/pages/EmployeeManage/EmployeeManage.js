@@ -54,10 +54,10 @@ export default function EmployeeManage() {
     useEffect(() => {
         if (group) {
             const user = auth.getCurrentUser()
-            let res = confirm(`You're about to grant permission for this group to ${username}. Proceed?`)
+            let res = window.confirm(`You're about to grant permission for this group to ${username}. Proceed?`)
             if (res) {
                 if (user && user.access_token && user.role == 'ADMIN') {
-                    GrantPermission(user, username, group).then(location.reload())
+                    GrantPermission(user, username, group).then(window.location.reload())
                 } else {
                     auth.logout()
                 }
@@ -73,10 +73,10 @@ export default function EmployeeManage() {
         if (toRemove) {
             const user = auth.getCurrentUser()
             console.log(toRemove)
-            let res = confirm(`You're about to remove ${username} from his/her groups. Proceed?`)
+            let res = window.confirm(`You're about to remove ${username} from his/her groups. Proceed?`)
             if (res) {
                 if (user && user.access_token && user.role == 'ADMIN') {
-                    RemoveFromGroup(user, toRemove).then(location.reload())
+                    RemoveFromGroup(user, toRemove).then(window.location.reload())
                 } else {
                     auth.logout()
                 }
@@ -89,7 +89,7 @@ export default function EmployeeManage() {
     useEffect(() => {
         if (toReset) {
             const user = auth.getCurrentUser()
-            let res = confirm("You're about to reset an employee's password. Proceed?")
+            let res = window.confirm("You're about to reset an employee's password. Proceed?")
             if (res) {
                 if (user && user.access_token && user.role == "ADMIN") {
                     ResetPassword(user, toReset).then(result => {

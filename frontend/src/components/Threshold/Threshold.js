@@ -31,14 +31,20 @@ function Threshold({ thresholds, createNewSession }) {
         })
     }
     const handleNewSession = (e,sessionId, numEggs) => {
+        e.preventDefault()
         const id = thresholds.find(threshold => threshold.id === sessionId).id
         const noEgg = parseInt(numEggs)
         if (id && parseInt(numEggs) > 0) {
             createNewSession(id, noEgg)
             setNumEggs('')
+            window.scrollTo(({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+              }))
+            alert("Đã tạo chu kì ấp trứng mới")
         }
         else {
-            e.preventDefault()
             alert('Số trứng không hợp lệ')
         }
     }
@@ -67,7 +73,7 @@ function Threshold({ thresholds, createNewSession }) {
                     <div className={styles.content}>
                         <div className={styles.inputContainer}>
                             <label htmlFor="numEggs">Số trứng</label>
-                            <input required type="number" id="numEggs" value={numEggs} onChange={(e) => { setNumEggs(e.target.value) }} />
+                            <input type="number" id="numEggs" value={numEggs} onChange={(e) => { setNumEggs(e.target.value) }} />
                         </div>
                         <div className={styles.selector}>
                             <label htmlFor="threshold">Loại trứng</label>

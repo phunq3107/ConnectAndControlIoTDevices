@@ -1,13 +1,13 @@
 import styles from './light.module.css'
 import Switch from 'react-switch'
 
-function LightConTrol({incubatorInfo, handleLightState, handleAutomation}) {
-    if (incubatorInfo) {
+function LightConTrol({ incubatorInfo, handleLightState, handleAutomation, automationOn, lightOn}) {
+    if (incubatorInfo && automationOn !== undefined && lightOn !== undefined) {
         return (
             <div className={styles.lightControl}>
                 <h3 className={styles.title}>Điều khiển đèn</h3>
                 <div>
-                    <div>Tình trạng đèn {incubatorInfo.lightState ? "BẬT" : "TẮT"} </div>
+                    <div>Tình trạng đèn {lightOn ? "BẬT" : "TẮT"} </div>
                     <div>
                         <div>Điều khiển đèn tự động</div>
                         <Switch onColor="#86d3ff"
@@ -20,7 +20,7 @@ function LightConTrol({incubatorInfo, handleLightState, handleAutomation}) {
                             height={20}
                             width={50}
                             onChange={handleAutomation}
-                            checked={incubatorInfo.enableAutomation}
+                            checked={automationOn}
                         />
                     </div>
                     <div>
@@ -35,8 +35,8 @@ function LightConTrol({incubatorInfo, handleLightState, handleAutomation}) {
                             height={20}
                             width={50}
                             onChange={handleLightState}
-                            checked={incubatorInfo.lightState}
-                            disabled={incubatorInfo.enableAutomation}
+                            checked={lightOn}
+                            disabled={automationOn}
                         />
                     </div>
 

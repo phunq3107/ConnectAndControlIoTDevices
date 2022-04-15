@@ -1,7 +1,7 @@
 import styles from './light.module.css'
 import LightChart from './LightChart'
 import LightConTrol from './LightControl'
-function LightInfo({lightData, incubatorInfo, handleAutomation, handleLightState, lightOn, automationOn }) {
+function LightInfo({ lightData, incubatorInfo, handleAutomation, handleLightState, automationOn, lightOn }) {
     if (lightData)
         return (
             <div className={styles.container}>
@@ -9,8 +9,9 @@ function LightInfo({lightData, incubatorInfo, handleAutomation, handleLightState
                     incubatorInfo={incubatorInfo}
                     handleLightState={handleLightState}
                     handleAutomation={handleAutomation}
-                    lightOn = {lightOn}
-                    automationOn = {automationOn}
+                    automationOn={automationOn}
+                    lightOn={lightOn}
+
                 />
                 <LightChart
                     lightData={lightData}

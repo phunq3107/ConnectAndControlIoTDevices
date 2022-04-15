@@ -15,14 +15,13 @@ const SetLightAutomation = (user, incubatorKey, groupInfo) => {
         body: raw,
         redirect: 'follow'
     };
-
-    fetch(`${groupsAPI}/automation`, requestOptions)
+    return fetch(`${groupsAPI}/automation`, requestOptions)
         .then(response => {
             if (response.status === 200)
                 return response.text()
             throw new Error(response.status)
         })
-        .then(result => console.log("Change automation"))
+        .then(result => console.log("Automaton ON/OFF"))
         .catch(error => console.log('error', error));
 }
 export default SetLightAutomation

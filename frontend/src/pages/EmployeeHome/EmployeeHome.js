@@ -13,6 +13,16 @@ function EmployeeHome() {
         }
         else auth.logout()
     }, [])
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const user = auth.getCurrentUser()
+            if (user && user.access_token) {
+                getAllGroups(user).then(res => setIncubators(res))
+            }
+            else auth.logout()
+        }, 5000)
+        return () => clearInterval(interval)
+    }, [])
     if (incubators)
         return (
             <>
@@ -23,9 +33,9 @@ function EmployeeHome() {
                         <div className={styles.incubatorsContainer}>
                             {
                                 incubators.map(incubator =>
-                                    <IncubatorCell key = {incubator.key} incubator={incubator} />
+                                    <IncubatorCell key={incubator.key} incubator={incubator} />
                                 )
-                            }                                                 
+                            }
                         </div>
                     </div>
                 </div>

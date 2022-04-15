@@ -50,10 +50,19 @@ class Gateway:
         if self.getSensorType(feed_id) == Gateway.SCREEN:
             # format: [username, noOfActiveDays,noEgg,hatchedEgg,currentTemp]
             payload = self.decodeScreenMessage(payload)
+            # self.serial.write(("user"+str(payload[0]) + "#").encode())
+            self.serial.write(f"user:{payload[0]}#".encode())
+            self.serial.write(f"info:{payload[1]}|{payload[2]}|{payload[3]}|{payload[4]}#".encode())
         # todo: update code for display on LCD monitor
-        logger.info(f"Receive data: [device='{self.getSensorType(feed_id)}', data='{payload}']")
-        if self.isMicrobitConnected:
+        elif self.getSensorType(feed_id) == Gateway.LIGHT:
             self.serial.write((str(payload) + "#").encode())
+        # elif self.getSensorType(feed_id) == Gateway.TEMPERATURE_SENSOR:
+        #     self.serial.write(("abc"+str(payload) + "#").encode())
+        # elif self.getSensorType(feed_id) == Gateway.SOUND_SENSOR:
+        #     self.serial.write((str(payload) + "|").encode())
+        logger.info(f"Receive data: [device='{self.getSensorType(feed_id)}', data='{payload}']")
+        # if self.isMicrobitConnected:
+        #     self.serial.write((str(payload) + "#").encode())
 
     def getPort(self):
         ports = serial.tools.list_ports.comports()

@@ -18,10 +18,12 @@ function Incubator() {
     const [soundData, setSoundData] = useState([])
     const [lightData, setLightData] = useState([])
     const [thresholds, setThreshHolds] = useState()
-
+    const [automationOn, setAutomationOn] = useState()
+    const [lightOn, setLightOn] = useState()
     const light = useRef()
     const tempSensor = useRef()
     const soundSensor = useRef()
+
 
     const prevLightData = useRef([])
     useEffect(() => {
@@ -45,6 +47,8 @@ function Incubator() {
             })
             getGroupInfo(user, incubatorKey).then(info => {
                 setIncubatorInfo(info)
+                setAutomationOn(info.enableAutomation)
+                setLightOn(info.lightState)
             })
             getThresholds(user).then(thresholds => {
                 setThreshHolds(thresholds)
@@ -113,12 +117,19 @@ function Incubator() {
         }, 5000)
         return () => clearInterval(interval)
     }, [])
+
+    useEffect(() => {
+        if (automationOn)
+            setLightOn(incubatorInfo.lightState)
+    }, [lightData])
     const handleLightState = () => {
         const user = auth.getCurrentUser()
 
         if (user && user.access_token) {
-            
-            setLightState(user, light.current, incubatorInfo)
+            if (automationOn !== true) {
+                setLightState(user, light.current, { ...incubatorInfo, lightState: lightOn })
+                setLightOn(prev => !prev)
+            }
         }
         else auth.logout()
     }
@@ -126,7 +137,8 @@ function Incubator() {
         const user = auth.getCurrentUser()
 
         if (user && user.access_token) {
-            setLightAutomation(user, incubatorKey, incubatorInfo)
+            setLightAutomation(user, incubatorKey, { ...incubatorInfo, enableAutomation: automationOn })
+            setAutomationOn(prev => !prev)
         }
         else auth.logout()
     }
@@ -158,6 +170,8 @@ function Incubator() {
                             lightData={lightData}
                             handleLightState={handleLightState}
                             handleAutomation={handleAutomation}
+                            automationOn={automationOn}
+                            lightOn={lightOn}
                         />
                         <Threshold
                             thresholds={thresholds}

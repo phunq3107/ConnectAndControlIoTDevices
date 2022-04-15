@@ -66,19 +66,19 @@ export default function EmployeeCreateForm () {
             <div className={styles.form}>
                 
                 <form>
-                    <div><h1>Registration Form</h1></div>
+                    <div><h1>Đơn thêm nhân viên</h1></div>
                     <div>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Tên tài khoản:</label>
                     <input type="text" id="username" name="username" onChange={(e)=>setUsername(e.target.value)}/><br></br><br></br>
                     </div>
                     <div>
-                    <label htmlFor="pass">Password:</label>
+                    <label htmlFor="pass">Mật khẩu:</label>
                     <input type="password" id="pass" name="pass" onChange={(e)=>setPassword(e.target.value)}/><br></br><br></br>
                     </div>
                     <div>
-                    <label htmlFor="group">Group:</label>
+                    <label htmlFor="group">Nhóm:</label>
                     <select id={styles.group} name="group" onChange={(e)=>setGroup(e.target.value)}>
-                        <option value="" selected="selected" className={styles.data_default}>---Assign a group---</option>
+                        <option value="" selected="selected" className={styles.data_default}>---Trao quyền---</option>
                         {groups.map((g) => <option value={g.key}>{g.key}</option>)}
                     </select>
                     </div>

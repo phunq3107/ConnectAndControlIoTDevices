@@ -2,11 +2,10 @@ import { logAPI } from "./logAPI"
 const GetAllLogByAdmin = (user, username) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${user.access_token}`);
-
         var requestOptions = {
             method: 'GET',
             headers: myHeaders,
-            redirect: 'follow'
+            redirect: 'follow',
         };
 
         return fetch(`${logAPI}/${username}`, requestOptions)

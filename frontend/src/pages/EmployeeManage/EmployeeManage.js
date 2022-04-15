@@ -4,13 +4,13 @@ import AdminNavbar from "../../components/Navbar/AdminNavbar"
 import AdminSidebar from "../../components/Sidebar/AdminSidebar"
 import styles from './EmployeeManage.module.css'
 import GetAllAccounts from "../../services/userAPI/GetAllAccounts"
-import { BsCalendarEvent } from 'react-icons/bs'
 import { FaRegUser } from 'react-icons/fa'
 import { GiEggClutch } from 'react-icons/gi'
 import { getAllGroups } from "../../services/groupsAPI"
 import GrantPermission from "../../services/userAPI/GrantPermission"
 import RemoveFromGroup from "../../services/userAPI/RemoveFromGroup"
 import ResetPassword from "../../services/userAPI/ResetPassword"
+import { Link, useNavigate } from "react-router-dom"
 export default function EmployeeManage() {
     const auth = useContext(AuthContext)
     const [employees,setEmployees] = useState([])
@@ -22,7 +22,7 @@ export default function EmployeeManage() {
     const [toRemove, setToRemove] = useState('')
     const [toReset, setToReset] = useState('')
     
-    
+    const navigate = useNavigate()
     useEffect(() => {
         const user = auth.getCurrentUser()
         if (user && user.access_token && user.role == 'ADMIN') {
@@ -104,26 +104,27 @@ export default function EmployeeManage() {
         }
     },[toReset])
 
+
     return (
         <>
         <AdminNavbar/>
         <div className={styles.container}>
             <AdminSidebar></AdminSidebar>
             <div className={styles.content}>
-                {employees.map(em =>
+                {employees.filter((e => e.username!=="admin" && e.enable === true)).map(em =>
                     <><div className={styles.titleContainer}>
-                            <h1 className={styles.title}>{em.username==="admin" ? "ADMIN: " + em.fullname : "EMPLOYEE: " + em.fullname}</h1>
                             {em.username === "admin" ? <></> :
                                 <div>
-                                <button className={styles.buttonRemove} onClick={(e) => setToRemove(em.username)}>Remove</button>
-                                <button className={styles.buttonRemove} onClick={(e) => setToReset(em.username)}>Reset</button>
-                                <select defaultValue="" className={styles.grant} onChange={(e) => {
-                                    setGroup(e.target.value);
-                                    setUsername(em.username)     
-                                }}>
-                                    <option key="grant" value="">---Grant---</option>
-                                    {groups.map((g) => <option key={g.key} value={g.key}>{g.name}</option>)}
-                                </select>
+                                    <button className={styles.buttonRemove} onClick={(e) => setToRemove(em.username)}>Remove</button>
+                                    <button className={styles.buttonRemove} onClick={(e) => setToReset(em.username)}>Reset</button>
+                                    <select defaultValue="" className={styles.grant} onChange={(e) => {
+                                        setGroup(e.target.value);
+                                        setUsername(em.username)     
+                                    }}>
+                                        <option key="grant" value="">---Grant---</option>
+                                        {groups.map((g) => <option key={g.key} value={g.key}>{g.name}</option>)}
+                                    </select>
+                                   <button onClick={() => navigate(`/admin/${em.username}/log`)} className={styles.buttonRemove}>Log</button>
                                 </div>
                             }
                         </div>
@@ -146,10 +147,6 @@ export default function EmployeeManage() {
                                         <FaRegUser className={styles.infoIcon} />
                                         <span className={styles.accountInfoItem}>{em.username}</span>
                                     </div>
-                                    <div className={styles.accountInfo}>
-                                        <BsCalendarEvent className={styles.infoIcon} />
-                                        <span className={styles.accountInfoItem}>{em.dob && em.dob.split('-').reverse().join('-')}</span>
-                                    </div>
                                     <span className={styles.infoBotTitle}>Quyền quản lí</span>
                                     {
                                         em.groups.map((group) => {
@@ -166,18 +163,6 @@ export default function EmployeeManage() {
                                 <form className={styles.updateForm}>
                                     <div className={styles.formLeft}>
                                         <div className={styles.updateItem}>
-                                            <label>Tên tài khoản</label>
-                                            <div>
-                                                <input type="text" placeholder={em.username} disabled={true} />
-                                            </div>
-                                        </div>
-                                        <div className={styles.updateItem}>
-                                            <label>Mật khẩu</label>
-                                            <div>
-                                                <input type="password" placeholder="********" disabled={true} />
-                                            </div>
-                                        </div>
-                                        <div className={styles.updateItem}>
                                             <label>Họ và tên</label>
                                             <div>
                                                 <input type="text" placeholder={em.fullname} disabled={true} />
@@ -189,16 +174,6 @@ export default function EmployeeManage() {
                                                 <input type="text" placeholder={em.dob} disabled={true} />
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className={styles.formRight}>
-                                        <div className={styles.rightImgcontainer}>
-                                            <img
-                                                className={styles.rightImg}
-                                                src="https://static.serato.com/common/images/account-icon.svg"
-                                                alt=""
-                                            />
-                                        </div>
-
                                     </div>
                                 </form>
                             </div>

@@ -16,6 +16,7 @@ import {
 } from './pages';
 import AdminLog from './pages/AdminLog/AdminLog';
 import AdminInfo from './pages/AdminInfo/AdminInfo';
+import EmLogAdmin from './pages/AdminLog/EmLogAdmin';
 
 function App() {
   const auth = useContext(AuthContext)
@@ -35,6 +36,7 @@ function App() {
         <Route path="/admin/employees" element={<EmployeeManage />} />
         <Route path="/admin/add" element={<EmployeeCreateForm />} />
         <Route path="/admin/log" element={<AdminLog />} />
+        <Route path="/admin/:username/log" element={<EmLogAdmin />} />
         <Route path="/admin/info" element={<AdminInfo />} />
         <Route path="/employee" element={<EmployeeHome />} />
         <Route path="/employee/info" element={<EmployeeInfo />} />

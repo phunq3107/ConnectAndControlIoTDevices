@@ -2,7 +2,6 @@ const HandleDescription = (description) => {
     const [groupPart, descPart] = description.split(':')
     const group = groupPart.slice(1, -1).split(' ').slice(-1)[0]
     let res = ""
-    console.log(descPart)
     if (descPart.includes("-> close")) {
         if (descPart.includes("light"))
             res = "Tắt đèn "

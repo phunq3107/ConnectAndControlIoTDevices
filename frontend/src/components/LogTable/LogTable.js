@@ -17,9 +17,9 @@ function LogTable({ headers, data }) {
                         <tr key={index}>
                             <td>{datum.id}</td>
                             <td>{datum.username}</td>
-                            <td>{handleActionData(datum.action)}</td>
-                            <td>{handleDescription(datum.description)}</td>
-                            <td>{formatTimeData(datum.timestamp)}</td>
+                            <td>{datum.action}</td>
+                            <td>{datum.description}</td>
+                            <td>{datum.timestamp}</td>
                         </tr>)
 
                 }

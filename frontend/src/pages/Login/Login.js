@@ -12,10 +12,15 @@ function Login() {
     }
 
     useEffect(() => {
-        const user = auth.getCurrentUser()
-        if (user) {
-            navigate(`${user.role.toLowerCase()}`)
+        const lastUser = auth.getCurrentUser()
+        if (lastUser) {
+            auth.checkLoggedin(lastUser).then(user => {
+                console.log(user)
+                if (user && user.access_token)
+                    navigate(`/${user.role.toLowerCase()}`)
+            })
         }
+        else auth.logout()
     }, [])
     return (
         <>

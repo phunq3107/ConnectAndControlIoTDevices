@@ -17,6 +17,8 @@ import {
 import AdminLog from './pages/AdminLog/AdminLog';
 import AdminInfo from './pages/AdminInfo/AdminInfo';
 import EmLogAdmin from './pages/AdminLog/EmLogAdmin';
+import GroupManage from './pages/GroupManage/GroupManage';
+import GroupInfo from './pages/GroupManage/GroupInfo';
 
 function App() {
   const auth = useContext(AuthContext)
@@ -38,6 +40,8 @@ function App() {
         <Route path="/admin/log" element={<AdminLog />} />
         <Route path="/admin/:username/log" element={<EmLogAdmin />} />
         <Route path="/admin/info" element={<AdminInfo />} />
+        <Route path="/admin/groups" element={<GroupManage />} />
+        <Route path="/admin/groups/:key" element={<GroupInfo />} />
         <Route path="/employee" element={<EmployeeHome />} />
         <Route path="/employee/info" element={<EmployeeInfo />} />
         <Route path="employee/log" element={<EmployeeLog />} />

@@ -1,24 +1,59 @@
 .placeholder {
   display: flex;
 }
-.incubator_list {
-  top: 100px;
-  display: flex;
-  z-index: 1;
-  height: 70px;
+.container {
+  flex: 4;
+  justify-content: center;
   align-items: center;
-  padding: 5px 45px;
-  background-color: e6eff5;
-  height: max-content;
-  position: sticky;
-  background-color: rgb(244, 245, 247);
 }
-.incubator_list li {
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  padding: 10px;
+.topCards {
+  width: 80%;
+  margin: auto;
+  padding: 70px 5px;
   display: flex;
-  text-transform: uppercase;
-  font-weight: 500;
+  flex-direction: row;
+  
+}
+.topCards > Link {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+}
+.topCards>Link:visited {
+  color: black;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 65%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin: auto;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.cardcontainer {
+  padding: 2px 16px;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+  height: 50px;
+  text-align: center;
+  width: 90%;
+}
+.cardcontainer > h3 {
+  padding-top: 15px;
+  
+}
+.image {
+  height: 90%;
+  width: 90%;
 }

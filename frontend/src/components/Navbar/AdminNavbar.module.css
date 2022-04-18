@@ -70,3 +70,8 @@ ul {
 .user-nav a:hover {
   color: rgb(21, 8, 139);
 }
+.title {
+  margin: auto;
+  font-size: 30px;
+  font-family: cursive;
+}

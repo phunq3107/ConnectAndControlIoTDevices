@@ -15,6 +15,10 @@ export default function AdminSidebar() {
             link: "/admin/add"
         },
         {
+            title: "Quản lý nhóm",
+            link: "/admin/groups"
+        },
+        {
             title: "Nhật ký hoạt động",
             link: "/admin/log"
         },

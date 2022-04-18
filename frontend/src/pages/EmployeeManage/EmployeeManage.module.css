@@ -309,3 +309,12 @@ input {
 .active > button {
   cursor: pointer;
 }
+.searchbox {
+  margin: auto;
+  width: 50%;
+}
+#search {
+  margin-left: 2em;
+  margin-bottom: 2em;
+  width: 90%;
+}

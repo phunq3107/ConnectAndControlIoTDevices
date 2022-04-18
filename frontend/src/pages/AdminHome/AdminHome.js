@@ -18,13 +18,51 @@ export default function AdminHome() {
     }, [])
     return (
         <div>
-            <AdminNavbar home/>
+            <AdminNavbar/>
             {/* <div className={styles.incubator_list}>
                 {incubators.map(incubator => <li><Link key={incubator.key} to="/incubator" state={{ incubatorKey: incubator.key }}>{incubator.name}</Link></li>)}
             </div> */}
             <div className={styles.placeholder}>
                 <AdminSidebar/>
-                <img src="/logo512.png" style={{flex:4,width:'100%'}}/>
+                <div className={styles.container}>
+                    <div className={styles.topCards}>
+                        <Link to={{pathname:"/admin/employees"}}>
+                        <div className={styles.card}>
+                            <img src="./paper.png" alt="Avatar" className={styles.image}/>
+                            <div className={styles.cardcontainer}>
+                                <h3><b>Quản lý nhân viên</b></h3> 
+                            </div>
+                        </div>
+                        </Link>
+                        <Link to={{pathname:"/admin/groups"}}>
+                        <div className={styles.card}>
+                            <img src="./bar-chart.png" alt="Avatar" className={styles.image}/>
+                            <div className={styles.cardcontainer}>
+                                <h3><b>Quản lý nhóm</b></h3> 
+                            </div>
+                        </div>
+                        </Link>
+                    </div>
+                    <div className={styles.topCards}>
+                        <Link to={{pathname:"/admin/info"}}>
+                        <div className={styles.card}>
+                            <img src="./user.png" alt="Avatar" className={styles.image}/>
+                            <div className={styles.cardcontainer}>
+                                <h3><b>Cá nhân</b></h3> 
+                            </div>
+                        </div>
+                        </Link>
+                        <Link to={{pathname:"/admin/groups"}}>
+                        <div className={styles.card}>
+                            <img src="./customer-support.png" alt="Avatar" className={styles.image}/>
+                            <div className={styles.cardcontainer}>
+                                <h3><b>Hoạt động</b></h3> 
+                            </div>
+                        </div>
+                        </Link>
+                    </div>
+                </div>
+                
             </div>
             
         </div>

@@ -51,9 +51,9 @@ export default function EmployeeCreateForm () {
                         throw new Error(response.status)
                     })
                     .then(result => {
-                        navigate(-2)
+                        //navigate(-2)
                     })
-                    .catch(error => console.log('error', error))
+                    .catch(error => console.log(error))
         } else {
             auth.logout()
         }
@@ -66,7 +66,7 @@ export default function EmployeeCreateForm () {
             <div className={styles.form}>
                 
                 <form>
-                    <div><h1>Đơn thêm nhân viên</h1></div>
+                    <div><h1>Thêm nhân viên</h1></div>
                     <div>
                     <label htmlFor="username">Tên tài khoản:</label>
                     <input type="text" id="username" name="username" onChange={(e)=>setUsername(e.target.value)}/><br></br><br></br>

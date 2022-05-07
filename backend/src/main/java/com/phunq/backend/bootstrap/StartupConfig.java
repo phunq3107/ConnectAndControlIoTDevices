@@ -31,10 +31,12 @@ public class StartupConfig implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    User admin = new User();
-    admin.setUsername(username);
-    admin.setPassword(passwordEncoder.encode(password));
-    admin.setRole(UserRole.ADMIN);
-    userService.save(admin);
+    try{
+      User admin = new User();
+      admin.setUsername(username);
+      admin.setPassword(passwordEncoder.encode(password));
+      admin.setRole(UserRole.ADMIN);
+      userService.save(admin);
+    } catch (Exception ignore){}
   }
 }

@@ -7,7 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile("dev")
 @Component
 @AllArgsConstructor
 public class BootstrapData implements CommandLineRunner {

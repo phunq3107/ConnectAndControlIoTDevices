@@ -23,7 +23,7 @@ public class Feed {
   private String name;
 
   @Column(unique = true)
-  private String key;
+  private String fKey;
 
   @Enumerated(EnumType.STRING)
   private FeedType type;
@@ -35,6 +35,14 @@ public class Feed {
   @ManyToOne
   @JoinColumn(name = "GROUP_ID")
   private FeedGroup feedGroup;
+
+  public String getKey() {
+    return fKey;
+  }
+
+  public void setKey(String key) {
+    this.fKey = key;
+  }
 
   public boolean isLight() {
     return this.type == FeedType.Light;
@@ -55,4 +63,6 @@ public class Feed {
   public Integer getCurrentValueAsInt() {
     return Integer.parseInt(this.currentValue);
   }
+
+
 }

@@ -22,7 +22,7 @@ import lombok.Data;
 public class FeedGroup {
 
   @Id private String id;
-  private String key;
+  private String gKey;
   private String name;
   private String description;
   private LocalDateTime startTime;
@@ -31,6 +31,14 @@ public class FeedGroup {
   //    private Integer upperTemperatureThreshold;
   private LocalDateTime createdAt;
   private Boolean enableAutomation = true;
+
+  public String getKey() {
+    return gKey;
+  }
+
+  public void setKey(String key) {
+    this.gKey = key;
+  }
 
   @ManyToOne @JoinColumn private TemperatureThreshold threshold;
 

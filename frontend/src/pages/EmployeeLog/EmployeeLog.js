@@ -35,7 +35,7 @@ function EmployeeLog() {
                 lg.timestamp.toLowerCase().includes(searchTerm.toLowerCase())
             )
         }
-        return formattedLog
+        return formattedLog.reverse()
     }
     if (log) {
         return (

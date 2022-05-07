@@ -6,6 +6,7 @@ import { getAllLogByAdmin } from "../../services/logAPI"
 import AdminNavbar from "../../components/Navbar/AdminNavbar";
 import AdminSidebar from "../../components/Sidebar/AdminSidebar";
 import { useParams } from "react-router-dom";
+import { handleActionData, handleDescription, formatTimeData } from '../../services/datahandler'
 function EmLogAdmin() {
     var {username} = useParams()
     const auth = useContext(AuthContext)
@@ -21,6 +22,16 @@ function EmLogAdmin() {
         }
         else auth.logout()
     }, []);
+    const handleLog = (log) => {
+        const formattedLog = log.map(lg =>
+        ({
+            ...lg,
+            action: handleActionData(lg.action),
+            description: handleDescription(lg.description),
+            timestamp: formatTimeData(lg.timestamp)
+        }))
+        return formattedLog.reverse()
+    }
         return (
             <>
                 <AdminNavbar />
@@ -28,7 +39,7 @@ function EmLogAdmin() {
                     <AdminSidebar />
                     <div className={styles.content}>
                         <h2 className={styles.title}>Nhật ký hoạt động của {username}</h2>
-                        <LogTable headers={["ID", "User", "Hoạt động", "Mô tả", "Thời gian"]} data={[...log].reverse()} />
+                        <LogTable headers={["ID", "User", "Hoạt động", "Mô tả", "Thời gian"]} data={handleLog(log)} />
                     </div>
                 </div>
             </>
